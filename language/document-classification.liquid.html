@@ -1,0 +1,22 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="category"
+      categories="{{ task.input.labels | to_json | escape }}"
+      header="What type of a document is this?"
+    >
+      <classification-target>
+        <iframe style="width: 100%; height: 600px;" src="{{ task.input.taskObject  | grant_read_access }}" type="application/pdf"></iframe>
+      </classification-target>
+      
+      <full-instructions header="Document Classification Instructions">
+        <p>Read the task carefully and inspect the document.</p>
+        <p>Choose the appropriate label that best suits the document.</p>
+      </full-instructions>
+
+      <short-instructions>
+        Please choose the correct category for the document
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

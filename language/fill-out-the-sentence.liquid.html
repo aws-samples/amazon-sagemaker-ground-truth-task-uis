@@ -1,0 +1,8 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <p><strong>Instructions: </strong>Given a piece of text, fill out the beginning and start of a sentence you'd expect to surround it</p>
+	<p><strong>Piece of text to surround: </strong>___ {{ task.input.text }} ___</p>
+  <crowd-input name="beginning" label="Missing beginning of the sentence..."></crowd-input>
+  <crowd-input name="end" label="Missing end of the sentence..."></crowd-input>
+</crowd-form>

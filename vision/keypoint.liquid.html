@@ -1,0 +1,24 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <crowd-keypoint
+    name="annotatedResult"
+    src="{{ task.input.taskObject | grant_read_access }}"
+    header="Please place points on each of the specified objects in this image"
+    labels="['Cat', 'Dog', 'Bird']"
+  >
+    <full-instructions header="Keypoint Instructions" >
+      <p>Use the keypoint tool to place a point on the requested target(s) of interest:</p>
+      <ol>
+        <li>
+          Do not include parts of the target that cannot be seen,
+          even though you think you can interpolate the whole shape of the target.
+        </li>
+      </ol>
+    </full-instructions>
+
+    <short-instructions>
+      Place a point on the requested target(s) of interest
+    </short-instructions>
+  </crowd-keypoint>
+</crowd-form>

@@ -1,0 +1,17 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <p>Open the link below to complete the survey. At the end of the survey, you will receive a code to paste into the box below to receive credit for taking our survey.</p>
+
+    <p><strong>Make sure to leave this window open as you complete the survey.</strong> When you are finished, you will return to this page to paste the code into the box.</p>
+
+    <p>
+    	<strong>Survey Link: </strong>
+    	<!-- NOTE: Update with your survey link in both places here -->
+    	<a href="{{ task.input.surveyLink }}" target="_blank">{{ task.input.surveyLink }}</a>
+    </p>
+	<p>
+		<strong>Provide the survey code here:</strong>
+    	<crowd-input name="survey-code" label="e.g. 123456"></crowd-input>
+    </p>
+</crowd-form>

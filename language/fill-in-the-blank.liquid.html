@@ -1,0 +1,7 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <p><strong>Instructions: </strong>Given a block of text, fill in the blank with the word you'd expect to be there</p>
+	<p><strong>Block of text continue: </strong>{{ task.input.textBeginning }} ____ {{ task.input.textEnd }}</p>
+  <crowd-input name="nextWord" label="Predicted word in the blank..."></crowd-input>
+</crowd-form>

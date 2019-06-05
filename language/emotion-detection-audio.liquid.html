@@ -1,0 +1,25 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="emotion"
+      categories="['Anger', 'Disgust', 'Fear', 'Happiness', 'Sadness', 'Surprise']"
+      header="What emotion does this audio convey?"
+    >
+      <classification-target>
+         <audio controls>
+            <source src="{{ task.input.taskObject  | grant_read_access }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+      </classification-target>
+      
+      <full-instructions header="Emotion Detection Instructions">
+        <p>Select the <strong>primary</strong> emotion that's expressed in the audio clip.</p>
+        <p>If there are multiple emotions expressed, use your judgement and choose the one that's is the strongest of the emotions.</p>
+      </full-instructions>
+
+      <short-instructions>
+        <p>Select the <strong>primary</strong> emotion that's expressed in the audio clip.</p>
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

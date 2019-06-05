@@ -1,0 +1,12 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <audio controls>
+      <source src="{{ task.input.taskObject | grant_read_access }}" type="audio/mpeg">
+      Your browser does not support the audio element.
+  </audio>
+  <h3>Instructions</h3>
+  <p>Transcribe the audio</p>
+  <p>Ignore "umms", "hmms", "uhs" and other non-textual phrases</p>
+  <crowd-text-area name="transcription" rows="4"></crowd-text-area>
+</crowd-form>

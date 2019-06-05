@@ -1,0 +1,25 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="intent"
+      categories="['Purchase', 'Return', 'Other']"
+      header="Pick the most relevant intention expressed by the below audio clip"
+    >
+      <classification-target>
+        <audio style="width: 100%" controls>
+            <source src="{{ task.input.taskObject | grant_read_access }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+      </classification-target>
+      
+      <full-instructions header="Intent Detection Instructions">
+        <p>Select the most relevant intention expressed by the audio clip.</p>
+        <p>If you think there are multiple relevant intentions expressed, use your judgment to choose the one that is most relevant.</p>
+      </full-instructions>
+
+      <short-instructions>
+        Pick the most relevant intention expressed by the audio clip
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

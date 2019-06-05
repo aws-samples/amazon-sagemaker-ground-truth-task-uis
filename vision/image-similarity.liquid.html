@@ -1,0 +1,22 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="image-similarity"
+      categories="['5 - Highly Similar', '4', '3', '2', '1 - Not Similar At All']"
+      header="How similar are the contents of these images?"
+    >
+      <classification-target>
+        <img style="width: 100%; max-height: 40%; margin-bottom: 10px" src="{{ task.input.image1 | grant_read_access }}"/>
+        <img style="width: 100%; max-height: 40%; margin-bottom: 10px" src="{{ task.input.image2 | grant_read_access }}"/>
+      </classification-target>
+      <full-instructions header="Image Similarity Instructions">
+          <p>
+            Please indicate how similar the two images are on a scale from 1 to 5, where 1 indicates that the images are not similar at all and 5 indicates that the image are highly similar.
+          </p>
+      </full-instructions>
+      <short-instructions>
+          Please indicate how similar the two images are on a scale from 1 to 5, where 1 indicates that the images are not similar at all and 5 indicates that the image are highly similar.
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

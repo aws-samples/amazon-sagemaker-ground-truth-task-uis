@@ -1,0 +1,28 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <crowd-classifier
+    name="audio-naturalness"
+    categories="['Excellent - Completely natural speech', 'Good - Mostly natural speech', 'Fair - Equally natural and unnatural speech', 'Poor - Mostly unnatural speech', 'Bad - Completely unnatural speech']"
+    header="How natural (i.e. human-sounding) is this recording?"
+  >
+    <classification-target>
+      <audio style="width: 100%" controls>
+        <source src="{{ task.input.taskObject | grant_read_access }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </classification-target>
+    <full-instructions>
+      <p>Listen to these examples to get an idea of how to rate:</p>
+      <p>Excellent - Completely natural speech - audio sample 1</p>
+      <p>Good - Mostly natural speech - audio sample 2</p>
+      <p>Fair - Equally natural and unnatural speech - audio sample 3</p>
+      <p>Poor - Mostly unnatural speech - audio sample 4</p>
+      <p>Bad - Completely unnatural speech - audio sample 5<br /><br /></p>
+    </full-instructions>
+    <short-instructions>
+      <p>Listen to the sample of computer generated speech and assess the quality of the audio based on how close it is to natural speech.</p>
+      For better results, wear headphones and work in a quiet environment.
+    </short-instructions>
+  </crowd-classifier>
+</crowd-form>

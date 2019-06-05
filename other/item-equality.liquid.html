@@ -1,0 +1,37 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="equal"
+      categories="['Yes', 'No', 'Cannot Determine']"
+      header="Are these two items the same?"
+    >
+      <classification-target>
+        <div>
+          <h3>Item 1</h3>
+	      	<p><strong>Title: </strong>{{ task.input.item1.title }}</p>
+	      	<p><a href="{{ task.input.item1.image | grant_read_access }}" target="_blank">Link</a></p>
+	      	<p>
+	      		<img style="height: 25%; margin-bottom: 10px" src="{{ task.input.item1.image | grant_read_access }}"/>
+	      	</p>
+	    </div>
+	    <hr/>
+        <div>
+          <h3>Item 2</h3>
+	      	<p><strong>Title: </strong>{{ task.input.item2.title }}</p>
+	      	<p><a href="{{ task.input.item2.image | grant_read_access }}" target="_blank">Link</a></p>
+	      	<p>
+	      		<img style="height: 25%; margin-bottom: 10px" src="{{ task.input.item2.image | grant_read_access }}"/>
+	      	</p>
+	    </div>
+      </classification-target>
+      <full-instructions>
+        <p>Read the task carefully and inspect the items.</p>
+        <p>Select whether the two items are the same.</p>
+        <p>If you're not sure, select Cannot Determine.</p>
+      </full-instructions>
+      <short-instructions>
+        Are these two items the same?
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

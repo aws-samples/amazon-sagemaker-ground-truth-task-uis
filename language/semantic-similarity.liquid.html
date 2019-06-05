@@ -1,0 +1,22 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="semantic-similarity"
+      categories="['5 - Highly Similar', '4', '3', '2', '1 - Not Similar At All']"
+      header="How similar is the meaning of these two pieces of text?"
+    >
+      <classification-target>
+        <p><strong>Text 1: </strong>{{ task.input.text1 }}</p>
+        <p><strong>Text 2: </strong>{{ task.input.text2 }}</p>
+      </classification-target>
+      
+      <full-instructions header="Semantic Similarity Instructions">
+        <h2>How similar is the meaning of these two pieces of text?</h2>
+      </full-instructions>
+
+      <short-instructions>
+        How similar is the meaning of these two pieces of text?
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

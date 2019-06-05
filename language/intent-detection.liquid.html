@@ -1,0 +1,25 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <crowd-classifier
+    name="intent"
+    categories="['Purchase', 'Return', 'Other']"
+    header="Pick the most relevant intention expressed by the below text"
+  >
+    <classification-target>
+      {{ task.input.utterance }}
+    </classification-target>
+    
+    <full-instructions header="Intent Detection Instructions">
+        <p>Select the most relevant intention expressed by the text.</p>
+        <div>
+           <p><strong>Example: </strong>I would like to return a pair of shoes</p>
+           <p><strong>Intent: </strong>Return</p>
+        </div>
+    </full-instructions>
+
+    <short-instructions>
+      Pick the most relevant intention expressed by the text
+    </short-instructions>
+  </crowd-classifier>
+</crowd-form>

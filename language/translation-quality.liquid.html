@@ -1,0 +1,19 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <p><strong>Read the two pieces of text below and use the sliders below indicate how much you agree with the statements (1 = Strongly disagree, 5 = Strongly agree)</strong></p>
+    <p><strong>Source Text ({{ task.input.original.language }}): </strong>{{ task.input.original.text }}</p>
+    <p><strong>Translated Text ({{ task.input.translation.language }}): </strong>{{ task.input.translation.text }}</p>
+  <p>
+    <ul>
+      <li>
+        <p>1) The <u><strong>second</strong></u> text <strong>adequately expresses the meaning </strong>of the <u><strong>first</strong></u> text in {{ task.input.translation.language }}</p>
+        <p><crowd-slider name="meaning" min="1" max="5" required pin/></p>
+      </li>
+      <li>
+        <p>2) The <u><strong>second</strong></u> text <strong>is fluent {{ task.input.translation.language }}</p>
+        <p><crowd-slider name="fluency" min="1" max="5" required pin/></p>
+      </li>
+    <ul>
+  </p>
+</crowd-form>

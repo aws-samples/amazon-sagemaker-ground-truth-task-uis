@@ -1,0 +1,38 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+	<crowd-instructions link-text="View instructions" link-type="button">
+		  <short-summary>
+		    <p>Write a short sentence that summarize the contents of an image.</p>
+		  </short-summary>
+		  <detailed-instructions>
+		    <p>Imagine that you are describing an image to a friend or tagging it for a news website. Provide a sentence that describes it.</p>
+		    <p>Use punctuatation and don't mention that you're describing an image.</p>
+		  </detailed-instructions>
+		  <positive-example>
+		    <p><img src="https://s3.amazonaws.com/cv-demo-images/highway.jpg"/></p>
+		    <p>
+		    	<em>A two-way highway running surrounded by trees with lots of cars and a gas station on the right.</em>
+		    </p>
+		  </positive-example>
+		  <negative-example>
+		    <p><img src="https://s3.amazonaws.com/cv-demo-images/highway.jpg"/></p>
+		    <p>
+		    	<strong>Don't mention that you're describing an image: </strong>
+		    	<em>In this image, we see a highway.</em>
+		    </p>
+		  </negative-example>
+		  <negative-example>
+		    <p><img src="https://s3.amazonaws.com/cv-demo-images/highway.jpg"/></p>
+		    <p>
+		    	<strong>Be specific: </strong>
+		    	<em>An outdoor scene with a city in the background.</em>
+		    </p>
+		  </negative-example>
+	</crowd-instructions>
+	<p><strong>Instructions: </strong>Given an image, write a sentence summarizing what it shows</p>
+	<p>Use punctuatation and don't mention that you're describing an image.</p>
+	<p>View the instructions for detailed instructions and examples.</p>
+	<p><img style="max-width: 100%; max-height: 100%" src="{{ task.input.taskObject | grant_read_access }}"></p>
+	<crowd-input name="summary" label="Summarize the image with a sentence..."></crowd-input>
+</crowd-form>

@@ -1,0 +1,40 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  	<crowd-instructions link-text="View instructions" link-type="button">
+		  <short-summary>
+		    <p>Given an image, write three words or short phrases that summarize its contents.</p>
+		  </short-summary>
+		  <detailed-instructions>
+		    <p>Imagine that you are describing an image to a friend or tagging it for a news website. Provide three specific words or short phrases that describe it.</p>
+		  </detailed-instructions>
+		  <positive-example>
+		    <p><img src="https://s3.amazonaws.com/cv-demo-images/highway.jpg"/></p>
+		    <p>
+		    	<ul>
+		    		<li>Highway</li>
+		    		<li>Cars</li>
+		    		<li>Gas station</li>
+		    	</ul>
+		    </p>
+		  </positive-example>
+		  <negative-example>
+		    <p><img src="https://s3.amazonaws.com/cv-demo-images/highway.jpg"/></p>
+		    <p>
+		    	These are not specific enough:
+		    	<ol>
+		    		<li>Trees</li>
+		    		<li>Outside</li>
+		    		<li>Daytime</li>
+		    	</ol>
+		    </p>
+		  </negative-example>
+	</crowd-instructions>
+    <p><strong>Instructions: </strong>Given an image, write three words or short phrases that summarize its contents.</p>
+    <p>If someone were to see these three words or phrases, they should understand the subject and context of the image, as well as any important actions.</p>
+	<p>View the instructions for detailed instructions and examples.</p>
+	<p><img style="max-width: 100%; max-height: 100%" src="{{ task.input.taskObject | grant_read_access }}"></p>
+  <crowd-input name="tag1" label="Word/phrase 1" required></crowd-input>
+  <crowd-input name="tag2" label="Word/phrase 2" required></crowd-input>
+  <crowd-input name="tag3" label="Word/phrase 3" required></crowd-input>
+</crowd-form>

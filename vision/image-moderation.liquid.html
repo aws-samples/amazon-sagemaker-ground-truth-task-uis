@@ -1,0 +1,24 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <crowd-image-classifier
+    name="category"
+    categories="['Violence', 'Nudity', 'Highly Sexual Content', 'Offensive Gestures', 'Profanity', 'Illegal Drugs', 'Other Adult or Offensive Content', 'N/A - Safe Image']"
+    src="{{ task.input.taskObject | grant_read_access }}"
+    header="Moderate this image by selecting whether it contains any sensitive content"
+  >
+    <full-instructions header="Image Moderation Instructions">
+      <h2>Detailed Instructions</h2>
+      <p>Determine if there is offensive content in this image</p>
+      <ol>
+        <li>Begin by carefully examining the entire image</li>
+        <li>Next determine if the image contains any offensive content</li>
+        <li> If the image contains offensive content, select the appropriate category: (1) Violence, (2) Nudity, (3) Highly Sexual Content, (4) Offensive Gestures, (5) Profanity, (6) Illegal Drugs, or (7) Other</li>
+        <li> If it does not contain offensive content, indicate it is a safe image </li>
+      </ol>
+    </full-instructions>
+    <short-instructions>
+      Determine if there is sensitive content in this image
+    </short-instructions>
+  </crowd-image-classifier>
+</crowd-form>

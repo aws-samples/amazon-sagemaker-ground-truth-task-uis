@@ -1,0 +1,7 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <p><strong>Instructions: </strong>Pretend that you are a computer's auto-complete and you are predicting what word a person would type next</p>
+	<p><strong>Sentence to continue: </strong>{{ task.input.taskObject }} ____</p>
+  <crowd-input name="nextWord" label="Predicted next word in the sentence..."></crowd-input>
+</crowd-form>

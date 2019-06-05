@@ -1,0 +1,30 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="same-speaker"
+      categories="['Same, absolutely sure', 'Same, not totally sure', 'Different, not totally sure', 'Different, absolutely sure', 'Cannot Determine']"
+      header="How confident are you that these two recordings were said by the same person?"
+    >
+      <classification-target>
+	    <audio controls><source src="{{ task.input.audioFile1 | grant_read_access }}" type="audio/wav">
+	    	Your browser does not support the audio tag.
+	    </audio> 
+	    <br/><br/>
+	    <audio controls><source src="{{ task.input.audioFile2 | grant_read_access }}" type="audio/wav">
+	    	Your browser does not support the audio tag.
+		</audio> 
+      </classification-target>
+      <full-instructions header="Same Speaker Evaluation">
+		<p>Listen to the audio samples. Determine whether the samples sound like they are produced by the same speaker. Focus on identifying the voice for the corresponding speaker identity rather than the content. </p>
+		<p>For better results, wear headphones and work in a quiet environment.</p>
+		<p>You have 4 options to indicate how sure you are of your decision of whether the two speech samples are spoken by the same speaker:</p>
+      </full-instructions>
+      <short-instructions>
+	    <div>How confident are you that these two recordings were said by the same person?</div>
+	    <br/>
+	    <div><em>Note:</em> Only determine whether the same person spoke both recordings, ignore the content of the speech. </div>
+		<br/>
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

@@ -1,0 +1,36 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="relevant"
+      categories="['Yes', 'No', 'Cannot Determine']"
+      header="Is the below item relevant to someone who searched for: {{ task.input.searchText }}"
+    >
+      <classification-target>
+      	<p><strong>Title: </strong>{{ task.input.title }}</p>
+      	<p><a href="{{ task.input.image | grant_read_access }}" target="_blank">Link</a></p>
+      	<p>
+      		<img style="height: 50%; margin-bottom: 10px" src="{{ task.input.image | grant_read_access }}"/>
+      	</p>
+      </classification-target>
+      <full-instructions header="Search Relevance Instructions">
+        <p>If someone searched for <b>{{ task.input.searchText }}</b>, would this item be relevant to them?</p>
+        <div>
+          <h4>Definition of relevance:</h4>
+
+          <ul>
+              <li>The item can be <strong>used directly for the interest</strong><br />
+              (e.g. tent in <em>camping</em>)</li>
+              <li>The item is <strong>themed towards a certain interest</strong><br />
+              (e.g. <em>Disney Frozen</em> themed clothing)</li>
+              <li>The item, while not directly themed for the interest, is <strong>used by interest enthusiasts</strong><br />
+              (e.g. generic knife that people use for <em>mushroom hunting</em>, clothing used to dress up as <em>Lord of the Rings</em> (movie/book) characters)</li>
+          </ul>
+          <p>Note that related toys/decorations/themed items count as 'Yes'.</p>
+        </div>
+      </full-instructions>
+      <short-instructions>
+        If someone searched for <strong>{{ task.input.searchText }}</strong>, would this item be relevant to them?
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

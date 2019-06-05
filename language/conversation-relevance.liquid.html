@@ -1,0 +1,21 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="relevance"
+      categories="['5 - Highly Relevant', '4', '3', '2', '1 - Not Relevant At All']"
+      header="How relevant is the below conversation to the topic: {{ task.input.topic }}"
+    >
+      <classification-target>
+        {{ task.input.conversation }}
+      </classification-target>
+      
+      <full-instructions header="Conversation Relevance Instructions">
+        <h2>How relevant is the below conversation to the given topic?</h2>
+      </full-instructions>
+
+      <short-instructions>
+        How relevant is the below conversation to the topic: {{ task.input.topic }}
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

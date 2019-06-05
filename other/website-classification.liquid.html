@@ -1,0 +1,23 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="category"
+      categories="{{ task.input.labels | to_json | escape }}"
+      header="What type of a website is this?"
+    >
+      <classification-target>
+        <a href="{{ task.input.taskObject }}" target="_blank">{{ task.input.taskObject }}</a>
+      </classification-target>
+      
+      <full-instructions header="Website Classification Instructions">
+        <p>Read the website carefully.</p>
+        <p>Choose the appropriate category that best suits the company.</p>
+        <p>Do additional research on the web if you're not sure.</p>
+      </full-instructions>
+
+      <short-instructions>
+        Choose the appropriate category that best suits the company.
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>
