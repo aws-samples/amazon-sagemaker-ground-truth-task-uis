@@ -1,0 +1,25 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="emotion"
+      categories="['Anger', 'Disgust', 'Fear', 'Happiness', 'Sadness', 'Surprise']"
+      header="What emotion does this tweet convey?"
+    >
+      <classification-target>
+        <blockquote class="twitter-tweet">
+          {{ task.input.taskObject }}
+        </blockquote> 
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
+      </classification-target>
+      
+      <full-instructions header="Emotion Detection Instructions">
+        <p>Select the <strong>primary</strong> emotion that's expressed in the tweet.</p>
+        <p>If there are multiple emotions expressed, use your judgement and choose the one that's is the strongest of the emotions.</p>
+      </full-instructions>
+
+      <short-instructions>
+       <p>Select the <strong>primary</strong> emotion the tweet is expressing.</p>
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>

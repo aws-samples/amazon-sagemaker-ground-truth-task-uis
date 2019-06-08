@@ -1,0 +1,88 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+  h3 {
+    margin-top: 0;
+  }
+  
+  crowd-card {
+    width: 100%;
+  }
+  
+  .card {
+    margin: 10px;
+  }
+  
+  .left {
+    width: 70%;
+    margin-right: 10px;
+    display: inline-block;
+    height: 200px;
+  }
+  
+  .right {
+    width: 20%;
+    height: 200px;
+    display: inline-block;
+  }
+</style>
+
+<crowd-form>
+  <short-instructions>
+    Your short instructions here.
+  </short-instructions>
+  
+  <full-instructions>
+    Your full instructions here.
+  </full-instructions>
+  
+  <div class="left">
+    <h3>What sentiment does this text convey?</h3>
+    <crowd-card>
+      <div class="card">
+        Nothing is great.
+      </div>
+    </crowd-card>
+  </div>
+  
+  <div class="right">
+    <h3>Select an option</h3>
+    
+    <select name="sentiment1" style="font-size: large" required>
+      <option value="">(Please select)</option>
+      <option>Very Negative</option>
+      <option>Negative</option>
+      <option>Slightly Negative</option>
+      <option>Neutral</option>
+      <option>Slightly Positive</option>
+      <option>Positive</option>
+      <option>Very Positive</option>
+      <option>Text is empty</option>
+    </select>
+  </div>
+  
+  <div class="left">
+    <h3>What sentiment does this text convey?</h3>
+    <crowd-card>
+      <div class="card">
+        Everything is great!
+      </div>
+    </crowd-card>
+  </div>
+  
+  <div class="right">
+    <h3>Select an option</h3>
+    
+    <select name="sentiment2" style="font-size: large" required>
+      <option value="">(Please select)</option>
+      <option>Very Negative</option>
+      <option>Negative</option>
+      <option>Slightly Negative</option>
+      <option>Neutral</option>
+      <option>Slightly Positive</option>
+      <option>Positive</option>
+      <option>Very Positive</option>
+      <option>Text is empty</option>
+    </select>
+  </div>
+</crowd-form>

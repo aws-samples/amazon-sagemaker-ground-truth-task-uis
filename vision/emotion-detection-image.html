@@ -1,0 +1,19 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-image-classifier
+      name="emotion"
+      categories="['Anger', 'Disgust', 'Fear', 'Happiness', 'Sadness', 'Surprise']"
+      header="What emotion does this image convey?"
+      src="{{ task.input.taskObject | grant_read_access }}"
+    >      
+      <full-instructions header="Emotion Detection Instructions">
+        <p>Select the <strong>primary</strong> emotion that's expressed in the image.</p>
+        <p>If there are multiple emotions expressed, use your judgement and choose the one that's is the strongest of the emotions.</p>
+      </full-instructions>
+
+      <short-instructions>
+        <p>Select the <strong>primary</strong> emotion that's expressed in the image.</p>
+      </short-instructions>
+    </crowd-image-classifier>
+</crowd-form>

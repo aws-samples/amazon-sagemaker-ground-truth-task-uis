@@ -1,0 +1,31 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <div id="errorBox"></div>
+   
+  <crowd-keypoint src="{{ task.input.taskObject | grant_read_access }}"
+    labels="['Item A', 'Item B', 'Item C']"        
+    header="Please locate the centers of each item."
+    name="annotatedResult">
+    <short-instructions>
+      Describe your task briefly here and give examples
+    </short-instructions>
+    <full-instructions>
+      Give additional instructions and good/bad examples here
+    </full-instructions>   
+  </crowd-keypoint>
+
+  <script>
+    document.querySelector('crowd-form').onsubmit = function(e) {
+      const keypoints = document.querySelector('crowd-keypoint').value.keypoints || document.querySelector('crowd-keypoint')._submittableValue.keypoints;
+      const labels = keypoints.map(function(p) {
+      return p.label;
+      });
+
+      if (labels.length != 3 || labels[0] === labels[1] || labels[1] === labels[2] || labels[0] === labels[2]) {
+        e.preventDefault();
+        errorBox.innerHTML = '<crowd-alert type="error" dismissible>You must specify 3 positions, one for each item. Please modify your answer.</crowd-alert>';
+        errorBox.scrollIntoView();
+      }
+    };
+  </script>

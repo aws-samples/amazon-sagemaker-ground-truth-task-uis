@@ -1,0 +1,108 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+.column {
+  padding: 10px;
+}
+
+.right .StackedList {
+  width: 33%;
+}
+
+.right {
+  display: flex;
+}
+
+.left img {
+  max-width: calc(10% - 3px);
+}
+
+.right img {
+  max-width: calc(30% - 3px);
+}
+</style>
+
+<crowd-form>
+  <short-instructions>Your instructions here.</short-instructions>
+  
+  <div id="errorBox"></div>
+  
+  <p>
+  Identify which photos are of the same people, and group them by dragging and dropping them onto the bottom.
+  </p>
+  
+  <div class="column left">
+    <div class="StackedList" id="unclassified">
+      <h3>Not yet classified</h3>
+      <img class="draggable" src="{{ task.input.image1 | grant_read_access }}">
+  
+      <img class="draggable" src="{{ task.input.image2 | grant_read_access }}">
+  
+      <img class="draggable" src="{{ task.input.image3 | grant_read_access }}">
+      
+      <img class="draggable" src="{{ task.input.image4 | grant_read_access }}">
+    </div>
+  </div>
+  
+  <div id="dropBoxes">
+  <div class="StackedList">
+    <h3>Face 1</h3>
+  </div>
+
+  <div class="StackedList">
+    <h3>Face 2</h3>
+  </div>
+
+  <div class="StackedList">
+    <h3>Face 3</h3>
+  </div>
+  </div>
+
+  <input type="hidden" name="faces" id="answerInput">
+  <div style="height: 500px"></div>
+</crowd-form>
+
+<script>
+  var parent;
+  Array.from(dropBoxes.children).forEach(function (c, i) {
+    if (i % 3 === 0) {
+      parent = document.createElement('div');
+      parent.classList.add('column');
+      parent.classList.add('right');
+      dropBoxes.appendChild(parent);
+    }
+    parent.appendChild(c);
+  });
+
+  document.querySelector('crowd-form').onsubmit = function (event) {
+    var groups = Array.from(document.querySelectorAll('.right .StackedList'));
+    
+    if (!groups.every(g => g.querySelector('img'))) {
+      errorBox.innerHTML = '<crowd-alert type="error" dismissible>You must specify 3 positions, one for each block. Please modify your answer.</crowd-alert>';
+      errorBox.scrollIntoView();
+      event.preventDefault();
+    }
+    
+    var answer = groups.map(function (group) {
+      return Array.from(group.querySelectorAll('img')).map(function(item) {
+        return new URL(item.src).pathname.substring(1);
+      });
+    });
+    answerInput.value = JSON.stringify(answer);
+  };
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/draggable/1.0.0-beta.8/draggable.bundle.js"></script>
+
+<script>
+  var containers = document.querySelectorAll('.StackedList');
+
+  new Draggable.Sortable(containers, {
+    draggable: '.draggable',
+    mirror: {
+      constrainDimensions: true,
+    },
+    plugins: [Draggable.Plugins.ResizeMirror]
+  });
+</script>

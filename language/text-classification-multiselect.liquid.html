@@ -1,0 +1,62 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+crowd-button span {
+  width: 100px;
+  display: inline-flex;
+}
+</style>
+
+<crowd-form>
+  <full-instructions>
+    Describe your task here.
+  </full-instructions>
+  
+  <short-instructions>
+    Describe your task here.
+  </short-instructions>
+  
+    <p>
+      <strong>Classify the following text:</strong>
+    </p>
+  
+    <p>
+      {{ task.input.taskObject }}
+    </p>
+    <input id="labels" name="labels" value="[]" type="hidden">
+
+    <side-content>
+      <crowd-button><span>
+        Dog
+      </span></crowd-button>
+      <br>
+      <crowd-button><span>
+        Cat
+      </span></crowd-button>
+      <br>
+      <crowd-button><span>
+        Bird
+      </span></crowd-button>
+      <br>
+      <br>
+    </side-content>
+</crowd-form>
+
+<script>
+  document.querySelectorAll('side-content crowd-button').forEach(function(button) {
+    button.onmouseup = function() {
+      button.disabled = !button.disabled;
+    };
+  });
+  
+  document.querySelector('crowd-form').onsubmit = function() {
+    var clickedButtons =
+      Array.from(document.querySelectorAll('side-content crowd-button')).filter(function(button) {
+      return button.disabled;
+    });
+    
+    labels.value = JSON.stringify(clickedButtons.map(function(button) {
+      return button.textContent.trim();
+    }));
+  };
+</script>

@@ -1,0 +1,154 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+  select {
+    font-size: large;
+  }
+  
+  #additionalDropdownBox {
+    margin-top: 20px;
+  }
+</style>
+
+<crowd-form>
+  <crowd-bounding-box
+    id="annotator"
+    src="{{ task.input.taskObject | grant_read_access }}"
+    name="_"
+    labels="['PERSON #1']"
+  >
+    <short-instructions>
+      Describe your task here.
+
+      <br><br><br><hr>
+
+      <h3>
+        Add new instance
+      </h3>
+      Add a new instance of:
+      <select name="_" id="dropdown"></select>
+
+      <div id="additionalDropdownBox" style="display: none;">
+        that belongs to the following instance:
+        <select name="_" id="additionalDropdown"></select>
+      </div>
+      <br>
+      <crowd-button id="addButton">Add</crowd-button>
+    </short-instructions>
+  </crowd-bounding-box>
+
+  <input type="hidden" id="answers" name="instances" value="[]">
+
+  <!-- Ignore values from all unnecessary inputs -->
+  <input type="hidden" name="_" value="_">
+
+</crowd-form>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/node-uuid/1.4.8/uuid.min.js"></script>
+
+<script>
+  var labelHierarchy = '<person><hand><finger></finger></hand><foot></foot></person>';
+  var hierarchyRoot = document.createElement('dummy-root-container');
+  hierarchyRoot.innerHTML = labelHierarchy;
+  
+  
+  function populateDropdown() {
+    dropdown.innerHTML = '';
+    dropdown.value = null;
+    
+    var options = new Set();
+
+    // Labels of highest hierarchy must always be in the dropdown
+    Array.from(hierarchyRoot.children).forEach(function(label) {
+      options.add(label.nodeName);
+    });
+
+    // Only labels of which parent labels are already labeled can be in the dropdown
+    Array.from(hierarchyRoot.querySelectorAll('*')).forEach(function(label) {
+      if (annotator.labels.find(function(l) {
+        return l.includes(label.parentNode.nodeName);
+      })) {
+        options.add(label.nodeName);
+      }
+    });
+    
+    options.forEach(function(o) {
+      var option = document.createElement('option');
+      option.innerText = o;
+      dropdown.appendChild(option);
+    });
+  };
+  
+  function populateAdditionalDropdown(label) {
+    additionalDropdown.innerHTML = '';
+    additionalDropdown.value = null;
+    
+    var possibleParentLabels =
+    Array.from(hierarchyRoot.querySelectorAll(label)).map(function(label) {
+      return label.parentNode.nodeName;
+    });
+  
+    var possibleParentInstances = annotator.labels.filter(function(instance) {
+      return possibleParentLabels.some(function(parentLabel) {
+        return new RegExp('^(.* >> )?' + parentLabel + ' #\\d+$').test(instance);
+      });
+    });
+
+    if (!possibleParentInstances.length) {
+      return;
+    }
+  
+    possibleParentInstances.forEach(function(instance) {
+      var option = document.createElement('option');
+      option.innerText = instance;
+      additionalDropdown.appendChild(option);
+    });
+    additionalDropdownBox.style.display = null;
+  }
+  
+  dropdown.onchange = function(event) {
+    populateAdditionalDropdown(event.target.value);
+  };
+  
+  document.addEventListener('all-crowd-elements-ready', populateDropdown);
+  
+  addButton.onclick = function() {
+    var instanceToAdd = additionalDropdown.value
+      ? additionalDropdown.value + ' >> ' + dropdown.value + ' #'
+      : dropdown.value + ' #';
+  
+    var count = annotator.labels.filter(function(l) {
+      return new RegExp('^' + instanceToAdd + '\\d+$').test(l);
+    }).length;
+    annotator.labels = annotator.labels.concat([instanceToAdd + (count + 1)]);
+    
+    // Re-initilize dropdowns
+    additionalDropdownBox.style.display = 'none';    
+    populateDropdown();
+  };
+  
+  document.querySelector('crowd-form').onsubmit = function() {
+    var boundingBoxes = (annotator._submittableValue || annotator.value).boundingBoxes;
+    boundingBoxes.map(function(b) {
+      b.id = uuid();
+      return b;
+    }).forEach(function(b) {
+      var splitLabel = b.label.split(' >> ');
+      b.shortLabel = splitLabel.pop().split(' #')[0];
+      
+      var parentBox = boundingBoxes.find(function(bb) {
+        return bb.label === splitLabel.join(' >> ');
+      });
+      if (parentBox) {
+        b.parent = parentBox.id;
+      }
+    });
+    
+    answers.value = JSON.stringify(boundingBoxes.map(function(b) {
+      b.label = b.shortLabel;
+      delete b.shortLabel;
+      return b;
+    }));
+  };
+</script>

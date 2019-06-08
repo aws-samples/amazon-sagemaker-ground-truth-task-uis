@@ -1,0 +1,70 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <crowd-polygon
+    id="annotator"
+    name="transcription"
+    src="{{ task.input.taskObject | grant_read_access }}"
+    header="Please transcribe and draw polygons around each item purchased"
+    labels="['placeholder']"
+  >
+    <short-instructions>
+      Describe your task here.
+
+      <br><br><br>
+      <hr>
+      <h3>
+        What is the date on this receipt?
+      </h3>    
+      <input type="date" name="receiptDate" min="1999-01-01" max="2019-12-31" required>
+
+
+      <br><br><br>
+      <h3>
+        Add new label
+      </h3>
+      
+      <crowd-input name="_customLabel" id="customLabel"></crowd-input>
+      <br>
+      <crowd-button id="addLabel">Add</crowd-button>
+      
+      <br><br><br>
+      <h3>
+      Manage labels
+      </h3>
+      <div id="labelsSection"></div>
+    </short-instructions>
+    
+    <full-instructions>
+      Describe your task in more detail here.
+    </full-instructions>
+  </crowd-polygon>
+</crowd-form>
+
+<script>
+  document.addEventListener('all-crowd-elements-ready', function(event) {
+    document.querySelector('crowd-polygon').labels = [];  
+  });
+  
+  function populateLabelsSection() {
+    labelsSection.innerHTML = '';
+    annotator.labels.forEach(function(label) {
+      const labelContainer = document.createElement('div');
+      labelContainer.innerHTML = label + ' <a href="javascript:void(0)">(Delete)</a>';
+      labelContainer.querySelector('a').onclick = function() {
+        annotator.labels = annotator.labels.filter(function(l) {
+          return l !== label;
+        });
+        populateLabelsSection();
+      };
+      labelsSection.appendChild(labelContainer);
+    });
+  }
+
+  addLabel.onclick = function() {
+    annotator.labels = annotator.labels.concat([customLabel.value]);
+    customLabel.value = null;
+    
+    populateLabelsSection();
+  };
+</script>
