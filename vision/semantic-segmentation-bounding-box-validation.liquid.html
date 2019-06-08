@@ -1,0 +1,87 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <crowd-bounding-box
+    name="incorrectSegments"
+    src="{{ task.input.taskObject | grant_read_access }}"
+    header="Draw bounding boxes around incorrect segments"
+    labels="['Incorrect segment']"
+  >
+    <full-instructions>
+      Describe your task
+    </full-instructions>
+    
+    <short-instructions>
+      Describe your task
+      <br>
+      <br>
+      <hr>
+      <h3>
+        Color codes
+      </h3>
+      Bird wing:
+      <span style="background-color: #2ca02c">&emsp;</span>
+      <span style="background-color: #1f77b4">&emsp;</span>
+      <br>
+      Bird eye:
+      <span style="background-color: #ff7f0e">&emsp;</span>
+      <span style="background-color: #d62728">&emsp;</span>
+      <br>
+      Bird beak:
+      <span style="background-color: #9467bd">&emsp;</span>
+      <br>
+      <br>
+      <hr>
+      <h3>
+        Segmentation opacity:
+      </h3>
+      <crowd-slider id="segmentationOpacity" name="segmentationOpacity" value="50" pin></crowd-slider>
+    
+    </short-instructions>
+    
+  </crowd-bounding-box>
+</crowd-form>
+
+<script>
+  // Add your base-64-encoded PNG string of your initial Semantic Segmentation
+  // annotations here. It will be overlaid on the original image.
+  var segmentationResults = '{{ task.input.pngString }}';
+  
+  function onEventStop(eventName, callback) {
+    overlay
+    var timer;
+    window.addEventListener(eventName, function() {
+      clearTimeout(timer);
+      timer = setTimeout(callback, 250);
+    });
+  };
+
+  var overlay = document.createElement('img');
+  overlay.style.position = 'absolute';
+  overlay.style.pointerEvents = 'none';
+  overlay.src = 'data:image/png;base64,' + segmentationResults.trim();
+
+  function setOpacity() {
+    overlay.style.opacity = segmentationOpacity.value / 100;
+  };
+  
+  segmentationOpacity.onchange = setOpacity;
+  
+  setTimeout(setOpacity, 1000);
+
+  function overlayImage() {
+    var canvas = document.querySelector('crowd-bounding-box').shadowRoot.querySelector('canvas.upper-canvas');
+    var coords = canvas.getBoundingClientRect();
+    overlay.height = coords.height;
+    overlay.width = coords.width;
+    overlay.style.left = coords.left + window.scrollX + 'px';
+    overlay.style.top = coords.top + window.scrollY + 'px';
+    document.body.appendChild(overlay);
+  }
+  
+  onEventStop('resize', overlayImage);
+  onEventStop('mousedown', overlayImage);
+  onEventStop('mousewheel', overlayImage);
+  
+  setTimeout(overlayImage, 1000);
+</script>
