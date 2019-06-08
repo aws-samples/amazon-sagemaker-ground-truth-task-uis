@@ -1,0 +1,62 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <crowd-semantic-segmentation
+    id="annotator"
+    name="myTexts"
+    src="{{ task.input.taskObject | grant_read_access }}"
+    header="Please add labels and annotate each item"
+    labels="['placeholder']"
+  >
+    <short-instructions>
+      Describe your task here.
+
+      <br><br><br>
+      <h3>
+        Add new label
+      </h3>
+      
+      <crowd-input name="_customLabel" id="customLabel"></crowd-input>
+      <br>
+      <crowd-button id="addLabel">Add</crowd-button>
+      
+      <br><br><br>
+      <h3>
+      Manage labels
+      </h3>
+      <div id="labelsSection"></div>
+    </short-instructions>
+    
+    <full-instructions>
+      Describe your task in more detail here.
+    </full-instructions>
+  </crowd-semantic-segmentation>
+</crowd-form>
+
+<script>
+  document.addEventListener('all-crowd-elements-ready', function(event) {
+    document.querySelector('crowd-semantic-segmentation').labels = [];  
+  });
+  
+  function populateLabelsSection() {
+    labelsSection.innerHTML = '';
+    annotator.labels.forEach(function(label) {
+      const labelContainer = document.createElement('div');
+      labelContainer.innerHTML = label + ' <a href="javascript:void(0)">(Delete)</a>';
+      labelContainer.querySelector('a').onclick = function() {
+        annotator.labels = annotator.labels.filter(function(l) {
+          return l !== label;
+        });
+        populateLabelsSection();
+      };
+      labelsSection.appendChild(labelContainer);
+    });
+  }
+
+  addLabel.onclick = function() {
+    annotator.labels = annotator.labels.concat([customLabel.value]);
+    customLabel.value = null;
+    
+    populateLabelsSection();
+  };
+</script>
