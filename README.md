@@ -1,6 +1,6 @@
 ## Amazon SageMaker Ground Truth Sample Task UIs
 
-This repository contains sample task UIs for [Amazon SageMaker Ground Truth](https://aws.amazon.com/sagemaker/groundtruth/). It contains subdirectories by use case (computer vision, natural language processing, other).
+This repository contains sample task UIs for [Amazon SageMaker Ground Truth](https://aws.amazon.com/sagemaker/groundtruth/). It contains subdirectories by use case (audio, images, text, video, other).
 
 For additional task UI resources, please refer to the [official documentation](https://docs.aws.amazon.com/sagemaker/latest/dg/sms-custom-templates-step2.html).
 
