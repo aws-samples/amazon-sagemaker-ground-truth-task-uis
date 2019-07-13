@@ -3,7 +3,8 @@
 <crowd-form>
   <div id="errorBox"></div>
    
-  <crowd-keypoint src="{{ task.input.taskObject | grant_read_access }}"
+  <crowd-keypoint
+    src="{{ task.input.taskObject | grant_read_access }}"
     labels="['Item A', 'Item B', 'Item C']"        
     header="Please locate the centers of each item."
     name="annotatedResult">
@@ -14,18 +15,47 @@
       Give additional instructions and good/bad examples here
     </full-instructions>   
   </crowd-keypoint>
+</crowd-form>
 
-  <script>
-    document.querySelector('crowd-form').onsubmit = function(e) {
-      const keypoints = document.querySelector('crowd-keypoint').value.keypoints || document.querySelector('crowd-keypoint')._submittableValue.keypoints;
-      const labels = keypoints.map(function(p) {
+<script>
+  var num_obj = 1;
+
+  document.querySelector('crowd-form').onsubmit = function(e) {
+    const keypoints = document.querySelector('crowd-keypoint').value.keypoints || document.querySelector('crowd-keypoint')._submittableValue.keypoints;
+    const labels = keypoints.map(function(p) {
       return p.label;
-      });
+    });
 
-      if (labels.length != 3 || labels[0] === labels[1] || labels[1] === labels[2] || labels[0] === labels[2]) {
+    // 1. Make sure total number of keypoints is correct.
+    var original_num_labels = document.getElementsByTagName("crowd-keypoint")[0].getAttribute("labels");
+
+    original_num_labels = original_num_labels.substring(2, original_num_labels.length - 2).split("\",\"");
+    var goalNumKeypoints = num_obj*original_num_labels.length;
+    if (keypoints.length != goalNumKeypoints) {
+      e.preventDefault();
+      errorBox.innerHTML = '<crowd-alert type="error">You must add all keypoint annotations and use each label only once.</crowd-alert>';
+      errorBox.scrollIntoView();
+      return;
+    }
+
+    // 2. Make sure all labels are unique.
+    labelCounts = {};
+    for (var i = 0; i < labels.length; i++) {
+      if (!labelCounts[labels[i]]) {
+        labelCounts[labels[i]] = 0;
+      }
+      labelCounts[labels[i]]++;
+    }
+    const goalNumSingleLabel = num_obj;
+
+    const numLabels = Object.keys(labelCounts).length;
+
+    Object.entries(labelCounts).forEach(entry => {
+      if (entry[1] != goalNumSingleLabel) {
         e.preventDefault();
-        errorBox.innerHTML = '<crowd-alert type="error" dismissible>You must specify 3 positions, one for each item. Please modify your answer.</crowd-alert>';
+        errorBox.innerHTML = '<crowd-alert type="error">You must use each label only once.</crowd-alert>';
         errorBox.scrollIntoView();
       }
-    };
-  </script>
+    })
+  };
+</script>
