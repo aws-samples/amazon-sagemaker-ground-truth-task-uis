@@ -33,7 +33,7 @@
     var goalNumKeypoints = num_obj*original_num_labels.length;
     if (keypoints.length != goalNumKeypoints) {
       e.preventDefault();
-      errorBox.innerHTML = '<crowd-alert type="error">You must add all keypoint annotations and use each label only once.</crowd-alert>';
+      errorBox.innerHTML = '<crowd-alert type="error" dismissible>You must add all keypoint annotations and use each label only once.</crowd-alert>';
       errorBox.scrollIntoView();
       return;
     }
@@ -53,7 +53,7 @@
     Object.entries(labelCounts).forEach(entry => {
       if (entry[1] != goalNumSingleLabel) {
         e.preventDefault();
-        errorBox.innerHTML = '<crowd-alert type="error">You must use each label only once.</crowd-alert>';
+        errorBox.innerHTML = '<crowd-alert type="error" dismissible>You must use each label only once.</crowd-alert>';
         errorBox.scrollIntoView();
       }
     })
