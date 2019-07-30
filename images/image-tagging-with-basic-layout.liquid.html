@@ -1,0 +1,16 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <img style="max-width: 100%; max-height: 100%" src="{{ task.input.taskObject | grant_read_access }}">
+  <crowd-input name="tag1" label="Word/phrase 1" required></crowd-input>
+  <crowd-input name="tag2" label="Word/phrase 2" required></crowd-input>
+  <crowd-input name="tag3" label="Word/phrase 3" required></crowd-input>
+
+  <short-instructions>
+    Your custom quick instructions and examples
+  </short-instructions>
+
+  <full-instructions>
+    Your custom detailed instracutions and more examples
+  </full-instructions>
+</crowd-form>
