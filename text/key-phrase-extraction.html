@@ -1,0 +1,30 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+  .key-phrase {
+    color: green;
+  }
+</style>
+
+<crowd-entity-annotation
+  name="key-phrases"
+  header="Highlight the key phrases andwords in the text below"
+  labels="[{'label': 'keyPhrase', 'shortDisplayName': 'KP', 'longDisplayName': 'Key Phrase'}]"
+  text="{{ task.input.taskObject }}"
+>
+  <short-instructions>
+    <p>In the provided text, identify the key phrases. For example, the key phases are <span class="key-phrase">highlighted</span> in the following:</p>
+    <p>"<span class="key-phrase">Excellent bag</span> and
+        <span class="key-phrase">fast shipping</span>! Bag
+        <span class="key-phrase">arrived right on time</span> and
+        <span class="key-phrase">packaged very well</span>. The bag itself is
+        <span class="key-phrase">good quality</span>! Was a bit
+        <span class="key-phrase">skeptical</span> ordering this bag off amazon but it's
+        <span class="key-phrase">100% authentic</span> and the
+        <span class="key-phrase">best price</span>!"</p>
+    <p>One way to help identify key phases is imagining what a word cloud would look like for this text.</p>  
+  </short-instructions>
+  <full-instructions header="Key Phrase Exctraction instructions">
+    Provide additional instructions and examples here
+  </full-instructions>
+</crowd-entity-annotation>

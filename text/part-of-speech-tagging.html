@@ -1,0 +1,25 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-entity-annotation
+  name="parts-of-speech"
+  header="Label the parts of speech for the words in the text below"
+  labels="[
+    {'label': 'noun', 'shortDisplayName': 'N', 'longDisplayName': 'Noun'},
+    {'label': 'verb', 'shortDisplayName': 'V', 'longDisplayName': 'Verb'},
+    {'label': 'adjective', 'shortDisplayName': 'ADJ', 'longDisplayName': 'Adjective'},
+    {'label': 'adverb', 'shortDisplayName': 'ADV', 'longDisplayName': 'Adverb'},
+    {'label': 'pronoun', 'shortDisplayName': 'PRN', 'longDisplayName': 'Pronoun'},
+    {'label': 'preposition', 'shortDisplayName': 'PRP', 'longDisplayName': 'Preposition'},
+    {'label': 'conjunction', 'shortDisplayName': 'CNJ', 'longDisplayName': 'Conjunction'}
+  ]"
+  text="{{ task.input.taskObject }}"
+>
+  <short-instructions>
+    <p>The following text may contain a noun, verb, article, adjective, preposition, pronoun, adverb, conjunction, and interjection. Please select and label all of the them.</p>
+    <p>If you have trouble choosing a category, try searching the web to find out more information.</p>
+    <p>To refresh your knowledge of parts of speech, please read <a href="https://en.wikipedia.org/wiki/Part_of_speech" target="_blank">the article on Wikipedia</a>.</p>
+  </short-instructions>
+  <full-instructions header="Part of Speech Labeling Instructions">
+    Provide additional instructions and examples here
+  </full-instructions>
+</crowd-entity-annotation>
