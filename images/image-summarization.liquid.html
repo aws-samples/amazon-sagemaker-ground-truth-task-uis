@@ -33,6 +33,6 @@
 	<p><strong>Instructions: </strong>Given an image, write a sentence summarizing what it shows</p>
 	<p>Use punctuatation and don't mention that you're describing an image.</p>
 	<p>View the instructions for detailed instructions and examples.</p>
-	<p><img style="max-width: 100%; max-height: 100%" src="{{ task.input.taskObject | grant_read_access }}"></p>
+	<p><img style="max-width: 35vw; max-height: 50vh" src="{{ task.input.taskObject | grant_read_access }}"></p>
 	<crowd-input name="summary" label="Summarize the image with a sentence..."></crowd-input>
 </crowd-form>
