@@ -1,0 +1,58 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+	body {
+		padding-left: 20px;
+		margin-bottom: 20px;
+	}
+	#outer-container {
+	    display: flex;
+	    justify-content: space-around;
+	    max-width: 900px;
+	    margin-left: 100px;
+	}
+	.left-container {
+    	margin-right: auto;
+    	padding-right: 50px;
+	}
+	.right-container {
+    	margin-left: auto;
+    	padding-left: 50px;
+	}
+	#vertical-separator {
+	    border: solid 1px #d5dbdb;
+	}
+</style>
+
+<crowd-form>
+    <div>
+        <h1>Instructions</h1>
+	Lorem ipsum...
+    </div>
+    <div>
+        <h2>Background</h2>
+    	<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div id="outer-container">
+	<span class="left-container">
+	    <h2>Option 1</h2>
+	    <p>Nulla facilisi morbi tempus iaculis urna. Orci dapibus ultrices in iaculis nunc sed augue lacus.</p>
+	</span>
+	<span id="vertical-separator"></span>
+	<span class="right-container">
+	    <h2>Option 2</h2>
+	    <p>Ultrices vitae auctor eu augue ut. Pellentesque massa placerat duis ultricies lacus sed turpis tincidunt id.</p>
+	</span>
+    </div>
+    <div>
+        <h2>Question</h2>
+    	<p>Which do you agree with?</p>
+	<crowd-radio-group>
+	    <crowd-radio-button name="option1" value="Option 1">Option 1</crowd-radio-button>
+	    <crowd-radio-button name="option2" value="Option 2">Option 2</crowd-radio-button>
+	</crowd-radio-group>
+
+    	<p>Why did you choose this answer?</p>
+	<crowd-text-area name="explanation" placeholder="Explain how you reached your conclusion..."></crowd-text-area>
+    </div>
+</crowd-form>
