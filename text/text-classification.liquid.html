@@ -1,11 +1,10 @@
 <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
 
 <crowd-form>
-    <crowd-classifier-multi-select
+    <crowd-classifier
       name="category"
       categories="['Positive', 'Negative', 'Neutral']"
-      header="Select the relevant categories"
-      exclusion-category="{ text: 'None of the above' }"
+      header="Select the most relevant category"
     >
       <classification-target>
         {{ task.input.taskObject }}
@@ -20,7 +19,7 @@
       </full-instructions>
 
       <short-instructions>
-       Choose all categories that are expressed by the text. 
+       Choose the most relevant category that is expressed by the text. 
       </short-instructions>
-    </crowd-classifier-multi-select>
+    </crowd-classifier>
 </crowd-form>
