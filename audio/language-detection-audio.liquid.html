@@ -1,0 +1,24 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="language"
+      categories="['Mandarin Chinese', 'Hindi', 'Spanish', 'English', 'Arabic', 'Portuguese', 'Bengali', 'Other', 'Unknown', 'None']"
+      header="Pick the most relevant intention expressed by the below audio clip"
+    >
+      <classification-target>
+        <audio style="width: 100%" controls>
+            <source src="{{ task.input.taskObject | grant_read_access }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+      </classification-target>
+      
+      <full-instructions header="Language Detection Instructions">
+        <p>Select the language being spoken in this audio clip.</p>
+      </full-instructions>
+
+      <short-instructions>
+        Select the language being spoken in this audio clip.
+      </short-instructions>
+    </crowd-classifier>
+</crowd-form>
