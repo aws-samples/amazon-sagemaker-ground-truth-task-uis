@@ -1,0 +1,50 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+  table, tr, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+  }
+</style>
+
+<crowd-form>
+    <div>
+        <h1>Instructions</h1>
+        <p>Please review the below translations and make corrections and improvements.</p>
+        <p>Your corrections should:
+          <ol>
+           <li>Make the translated text more accurately express the meaning of the original text</li>
+           <li>Make the translated text read more like something a person would write rather than an automated translation</li>
+          </ol>
+        </p>
+    </div>
+
+    <table>
+      <tr>
+        <th>Original</th>
+        <th>Translation</th>
+        <th style="width: 70px">Rating</th>
+      </tr>
+
+      {% for pair in task.input.translationPairs %}
+
+        <tr>
+          <td>{{ pair.originalText }}</td>
+          <td><crowd-text-area name="translation{{ forloop.index }}" value="{{ pair.translation }}"></crowd-text-area></td>
+          <td>
+            <p>
+              <input type="radio" id="good{{ forloop.index }}" name="rating{{ forloop.index }}" value="good" required>
+              <label for="good{{ forloop.index }}">Good</label>
+            </p>
+            <p>
+              <input type="radio" id="bad{{ forloop.index }}" name="rating{{ forloop.index }}" value="bad" required>
+              <label for="bad{{ forloop.index }}">Bad</label>       
+            </p>
+          </td>
+        </tr>
+
+      {% endfor %}
+
+    </table>
+</crowd-form>
