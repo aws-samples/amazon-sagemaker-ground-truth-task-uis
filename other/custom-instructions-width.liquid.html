@@ -1,0 +1,47 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<!-- This example shows how you can override the width of the <short-instructions>
+     and <full-instructions> slots. It uses <crowd-classifier-multi-select>, but also
+     works for other elements such as <crowd-bounding-box>, <crowd-entity-annotator>, etc. -->
+
+<crowd-form>
+    <crowd-classifier-multi-select
+      name="category"
+      categories="['Music', 'Sports', 'News', 'Politics']"
+      header="What type of video is this (select all that apply)?"
+      exclusion-category="{ text: 'None of the above' }"
+    >
+      <classification-target>
+         <video width="100%" height="315" controls>
+          <source src="{{ task.input.taskObject | grant_read_access }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </classification-target>
+      <full-instructions header="Video Classification Instructions">
+        <p>Read the task carefully and inspect the video.</p>
+        <p>Choose the appropriate label that best suits the video.</p>
+      </full-instructions>
+      <short-instructions>
+        <p>Read the task carefully and inspect the video.</p>
+        <p>Choose the appropriate label that best suits the video.</p>
+      </short-instructions>
+    </crowd-classifier-multi-select>
+</crowd-form>
+
+<script>
+    document.addEventListener('all-crowd-elements-ready', () => {
+        /*
+          Update 'crowd-classifier-multi-select' to the other element name if you use this
+          with a different Crowd HTML Element such as <crowd-bounding-box>
+        */
+        const classifier = document.querySelector('crowd-classifier-multi-select');
+        const instructionsPane = classifier.shadowRoot.querySelector('.awsui-app-layout__navigation');
+        const fullInstructionsModal = classifier.shadowRoot.querySelector('.awsui-modal-dialog');
+
+        // Sets instructions width to 400 pixels, adjustable as needed
+        instructionsPane.style.width = "400px";
+    
+        // Will fill 90% of the width of the screen, changeable to whatever you need
+        fullInstructionsModal.style.maxWidth = "90%";
+    });
+</script>
