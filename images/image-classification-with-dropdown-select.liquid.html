@@ -1,0 +1,27 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <short-instructions>
+      Select the correct category from the dropdown. Include useful examples here as HTML/images.
+  </short-instructions>
+
+  <full-instructions header="Classification Instructions">
+      Include addtional detailed instructions and examples here as HTML/images.
+  </full-instructions>
+
+  <img src="{{ task.input.taskObject | grant_read_access }}" height="70%" width="70%"/>
+  <p>
+    Select the correct label category
+  </p>
+  <div>
+      <select name="animal" required>
+          <option disabled selected value> -- select an option -- </option>
+          <option value="cat">Cat</option>
+          <option value="dog">Dog</option>
+          <option value="snake">Snake</option>
+          <option value="bird">Bird</option>
+          <option value="other">Other Animal</option>
+          <option value="none">No Animal in Image</option>
+      </select>
+  </div>
+</crowd-form>
