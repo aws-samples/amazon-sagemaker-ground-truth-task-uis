@@ -1,0 +1,28 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <crowd-line
+    name="lines"
+    src="{{ task.input.taskObject | grant_read_access }}"
+    header="Add header here to describe the task"
+    labels="['car','pedestrian','street car']"
+  >
+    <short-instructions>
+        <p>Read the task carefully and inspect the image.</p>
+        <p>Choose the appropriate label that best suits the image.</p>
+        <p>Draw a line on each objects that the label applies to.</p>
+    </short-instructions>
+
+    <full-instructions>
+        <p>Read the task carefully and inspect the image.</p>
+        <p>Choose the appropriate label that best suits the image. 
+        <p>Draw a line along each object that the image applies to.
+            Make sure that the line does not extend beyond the boundaries
+            of the object.
+        </p>
+        <p>Each line is defined by a starting and ending point. Carefully
+        place the starting and ending points on the boundaries of the object.</p>
+    </full-instructions>
+    
+  </crowd-line>
+</crowd-form>

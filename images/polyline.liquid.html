@@ -1,0 +1,30 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+  <crowd-polyline
+    name="crowdPolyline"
+    src="{{ task.input.taskObject | grant_read_access }}"
+    header="Add header here to describe the task"
+    labels="['car','pedestrian','street car']"
+    label-colors="['#d62728','#0000FF']"
+  >
+    <full-instructions>
+        <p>Read the task carefully and inspect the image.</p>
+        <p>Choose the appropriate label that best suits the image.</p>
+        <p>Draw a polyline around the boundaries of all objects
+        that the label applies to.</p>
+        <p>Make sure that the polyline fits tightly around the boundary
+        of the object.</p>
+    </full-instructions>
+
+    <short-instructions>
+        <p>Read the task carefully and inspect the image.</p>
+        <p>Review the tool guide to learn how to use the polyline tool.</p>
+        <p>Choose the appropriate label that best suits the image.</p>
+        <p>To draw a polyline, select a label that applies to an object of interest 
+            and add a single point to the photo by clicking on that point. Continue to 
+            draw the polyline around the object by adding additional points
+            around the object boundary.</p>
+    </short-instructions>
+  </crowd-polyline>
+</crowd-form>
