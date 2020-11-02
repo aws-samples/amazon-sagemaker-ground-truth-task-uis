@@ -1,0 +1,58 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+{% capture s3_uri %}s3://{{ task.input.aiServiceRequest.document.s3Object.bucket }}/{{ task.input.aiServiceRequest.document.s3Object.name }}{% endcapture %}
+
+<crowd-form>
+  <crowd-textract-analyze-document
+    src="{{ s3_uri | grant_read_access }}"
+    initial-value="{{ task.input.selectedAiServiceResponse.blocks }}"
+    header="Review the key-value pairs listed on the right and correct them if they don't match the following document."
+    no-key-edit
+    no-geometry-edit
+    keys="{{ task.input.humanLoopContext.importantFormKeys }}"
+    block-types="['KEY_VALUE_SET']"
+  >
+    <short-instructions header="Instructions">
+      <style>
+        .instructions {
+          white-space: pre-wrap;
+        }
+        .instructionsImage {
+          display: inline-block;
+          max-width: 100%;
+        }
+      </style>
+      <p class='instructions'>Click on a key-value block to highlight the corresponding key-value pair in the document.
+
+If it is a valid key-value pair, review the content for the value. If the content is incorrect, correct it.
+
+If the text of the value is incorrect, correct it.
+<img class='instructionsImage' src="https://assets.crowd.aws/images/a2i-console/correct-value-text.png" width="100%" />
+
+If a wrong value is identified, correct it.
+<img class='instructionsImage' src="https://assets.crowd.aws/images/a2i-console/correct-value.png" width="100%" />
+
+If it is not a valid key-value relationship, choose <b>No</b>.
+<img class='instructionsImage' src="https://assets.crowd.aws/images/a2i-console/not-a-key-value-pair.png" width="100%" />
+
+If you can’t find the key in the document, choose <b>Key not found</b>.
+<img class='instructionsImage' src="https://assets.crowd.aws/images/a2i-console/key-is-not-found.png" width="100%" />
+
+If the content of a field is empty, choose <b>Value is blank</b>.
+<img class='instructionsImage' src="https://assets.crowd.aws/images/a2i-console/value-is-blank.png" width="100%" />
+
+<b>Examples</b>
+The key and value are often displayed next or below to each other.
+
+For example, key and value displayed in one line.
+<img class='instructionsImage' src="https://assets.crowd.aws/images/a2i-console/sample-key-value-pair-1.png" width="100%" />
+
+For example, key and value displayed in two lines.
+<img class='instructionsImage' src="https://assets.crowd.aws/images/a2i-console/sample-key-value-pair-2.png" width="100%" />
+
+If the content of the value has multiple lines, enter all the text without a line break. Include all value text, even if it extends beyond the highlighted box.
+<img class='instructionsImage' src="https://assets.crowd.aws/images/a2i-console/multiple-lines.png" width="100%" /></p>
+    </short-instructions>
+
+    <full-instructions header="Instructions"></full-instructions>
+  </crowd-textract-analyze-document>
+</crowd-form>

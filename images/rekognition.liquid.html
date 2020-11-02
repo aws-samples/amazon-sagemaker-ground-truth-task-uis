@@ -1,0 +1,135 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+{% capture s3_uri %}s3://{{ task.input.aiServiceRequest.image.s3Object.bucket }}/{{ task.input.aiServiceRequest.image.s3Object.name }}{% endcapture %}
+
+<crowd-form>
+  <crowd-rekognition-detect-moderation-labels
+    categories='[
+      {% for label in task.input.selectedAiServiceResponse.moderationLabels %}
+        {
+          name: "{{ label.name }}",
+          parentName: "{{ label.parentName }}",
+        },
+      {% endfor %}
+    ]'
+    src="{{ s3_uri | grant_read_access }}"
+    header="Review the image and choose all applicable categories."
+  >
+    <short-instructions header="Instructions">
+      <style>
+        .instructions {
+          white-space: pre-wrap;
+        }
+      </style>
+      <p class='instructions'>Review the image and choose all applicable categories.
+If no categories apply, choose None.
+
+<b>Nudity</b>
+Visuals depicting nude male or female person or persons
+
+<b>Graphic Male Nudity</b>
+Visuals depicting full frontal male nudity, often close ups
+
+<b>Graphic Female Nudity</b>
+Visuals depicting full frontal female nudity, often close ups
+
+<b>Sexual Activity</b>
+Visuals depicting various types of explicit sexual activities and pornography
+
+<b>Illustrated Explicit Nudity</b>
+Visuals depicting animated or drawn sexual activity, nudity or pornography
+
+<b>Adult Toys</b>
+Visuals depicting adult toys, often in a marketing context
+
+<b>Female Swimwear or Underwear</b>
+Visuals depicting female person wearing only swimwear or underwear
+
+<b>Male Swimwear Or Underwear</b>
+Visuals depicting male person wearing only swimwear or underwear
+
+<b>Barechested Male</b>
+Visuals depicting topless males
+
+<b>Partial Nudity</b>
+Visuals depicting covered up nudity, for example using hands or pose
+
+<b>Sexual Situations</b>
+Visuals depicting passionate kissing and embracing of a sexual nature
+
+<b>Revealing Clothes</b>
+Visuals depicting revealing clothes and poses, such as deep cut dresses
+
+<b>Graphic Violence or Gore</b>
+Visuals depicting prominent blood or bloody injuries
+
+<b>Physical Violence</b>
+Visuals depicting violent physical assault, such as kicking or punching
+
+<b>Weapon Violence</b>
+Visuals depicting violence using weapons like firearms or blades, such as shooting
+
+<b>Weapons</b>
+Visuals depicting weapons like firearms and blades
+
+<b>Self Injury</b>
+Visuals depicting self-inflicted cutting on the body, typically in distinctive patterns using sharp objects
+
+<b>Emaciated Bodies</b>
+Visuals depicting extremely malnourished human bodies
+
+<b>Corpses</b>
+Visuals depicting human dead bodies
+
+<b>Hanging</b>
+Visuals depicting death by hanging</p>
+
+<b>Air Crash</b>
+Visuals depicting air crashes
+
+<b>Explosions and Blasts</b>
+Visuals depicting blasts and explosions
+
+<b>Middle Finger</b>
+Visuals depicting a person showing the middle finger as a rude gesture
+
+<b>Drug Products</b>
+Visuals depicting drug products like joints or marijuana
+
+<b>Drug Use</b>
+Visuals depicting drug use, for example, snorting drug powders
+
+<b>Pills</b>
+Visuals depicting pills of any kind
+
+<b>Drug Paraphernalia</b>
+Visuals depicting drug paraphernalia like bongs and vaporizers
+
+<b>Tobacco Products</b>
+Visuals depicting tobacco products like cigarettes and e-cigarette devices
+
+<b>Smoking</b>
+Visuals depicting a person or persons smoking
+
+<b>Drinking</b>
+Visuals depicting a person or persons drinking alcoholic beverages
+
+<b>Alcoholic Beverages</b>
+Visuals depicting bottles or containers of alcoholic beverages
+
+<b>Gambling</b>
+Visuals depicting gambling, such as slot machines or casinos
+
+<b>Nazi Party</b>
+Visuals depicting Nazi party symbols, such as the Nazi Swastika
+
+<b>White Supremacy</b>
+Visuals depicting white supremacy symbols, such as the Confederate flag
+
+<b>Extremist</b>
+Visuals depicting flags and emblems of extremist organizations
+
+    </short-instructions>
+
+    <full-instructions header="Instructions"></full-instructions>
+  </crowd-rekognition-detect-moderation-labels>
+</crowd-form>
