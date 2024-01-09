@@ -1,0 +1,72 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+  table, tr, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+  }
+</style>
+
+<crowd-form>
+    <div>
+        <h1>Instructions</h1>
+        <p>Please review the form and table line items, and make corrections where appropriate. </p>
+    </div>
+    <br>
+    <table>
+      <tr>
+        <th>LINE ITEM</th>
+        <th>BIOMETRIC DATE</th>
+        <th>PATIENT NAME</th>
+        <th>A1C MARKER</th>
+        <th>TOTAL CHOL MARKER</th>
+        <th>CHANGE REQUIRED</th>
+        <th>CORRECTED A1C</th>
+        <th>CORRECTED CHOL</th>
+        <th>COMMENTS</th>
+      </tr>
+
+      {% for pair in task.input.Pairs %}
+      
+      <!-- Example manifest containing patient data -->
+      <!-- {"source": "tabular","Pairs": [{"row": "0","biometricdate": "1/15/2009","patientname": "Jane Doe","a1c": "5.0","totalchol": "140"},
+      																		{"row": "1","biometricdate": "1/15/2010","patientname": "John Doe","a1c": "6.0","totalchol": "200"}]} -->
+
+        <tr>
+          <td>{{ pair.row }}</td>
+          <td><crowd-text-area name="predicted{{ forloop.index }}" value="{{ pair.biometricdate }}"></crowd-text-area></td>
+          <td><crowd-text-area name="predicted{{ forloop.index }}" value="{{ pair.patientname }}"></crowd-text-area></td>
+          <td><crowd-text-area name="predicted{{ forloop.index }}" value="{{ pair.a1c }}"></crowd-text-area></td>
+          <td><crowd-text-area name="predicted{{ forloop.index }}" value="{{ pair.totalchol }}"></crowd-text-area></td>
+          <td>
+            <p>
+              <input type="radio" id="agreeline{{ forloop.index }}" name="ratingline{{ forloop.index }}" value="agree" required>
+              <label for="agreeline{{ forloop.index }}">Correct</label>
+            </p>
+            <p>
+              <input type="radio" id="disagreeline{{ forloop.index }}" name="ratingline{{ forloop.index }}" value="disagree" required>
+              <label for="disagreeline{{ forloop.index }}">Incorrect</label>
+            </p>
+          </td>
+           <td>
+            <p>
+            <input type="text" name="Truea1c{{ forloop.index }}" placeholder="Corrected A1C" />
+            </p>
+           </td>
+           <td>
+            <p>
+            <input type="text" name="Truechol{{ forloop.index }}" placeholder="Corrected CHOL" />
+            </p>
+           </td>
+           <td>
+            <p>
+            <input type="text" name="Change Reason{{ forloop.index }}" placeholder="Explain why you changed the value" />
+            </p>
+           </td>
+        </tr>
+
+      {% endfor %}
+
+    </table>
+</crowd-form>
