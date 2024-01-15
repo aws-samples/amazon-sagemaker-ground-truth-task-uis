@@ -1,0 +1,71 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+<style>
+  .image-section {
+    float: left;
+    margin-left: 50px;
+    width: 45%;
+  }
+
+  .questionairs {
+    position: relative;
+    margin-left: 550px;
+    margin-top: 20px;
+  }
+
+  crowd-text-area {
+    border: 1px solid grey;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    max-height: 40vh;
+    width: 70%;
+    overflow: auto;
+  }
+  
+  crowd-button {
+    margin-left: 10px;
+    margin-top: 20px;
+  }
+  
+  ul {
+    margin-left:20px;
+  }
+  
+</style>
+
+<crowd-form>
+  <div>
+    <classification-target>
+      <div class="image-section">
+        <div>
+
+          <p><strong>Image</strong></p>
+          <p><img style="height: 70vh" src="{{ task.input.taskObject | grant_read_access}}"/></p>
+            
+        </div>
+
+      </div>
+    </classification-target>
+
+
+    <div class="questionairs">
+      <br>
+      <br>
+      <h3>Describe the Image.</h3>
+      <p>
+        In this task, please craft a high-quality caption accurately depicting the image shown on the left.
+            <ul style="padding-left:50px; font-size: 15px;">
+              <ul>
+                      <li>Accurately describe the key elements of the image, focusing on subjects, actions, and context.</li>
+                      <li>Ensure clarity and brevity, while comprehensively conveying the image's content.</li>
+                      <li>Avoid assumptions or interpretations; stick to observable facts in the image.</li>
+                      <li>Include relevant details such as colors, numbers, and apparent emotions, where necessary.</li>
+                      <li>Check for correct spelling and grammar to maintain professional quality captions.</li>
+              </ul>
+            </ul> 
+      </p>
+      <form action="" style="height: auto;">
+        <crowd-text-area id="comment" name="comment" rows="4" value="" style="width: 60%;"></crowd-text-area>
+      </form>
+    </div>
+  </div>
+</crowd-form>
