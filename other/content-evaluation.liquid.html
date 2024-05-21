@@ -1,0 +1,192 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+    .column {
+        float: left;
+        width: 45%;
+    }
+
+    .row:after {
+        content: "";
+        display: none;
+        clear: both;
+    }
+
+    div.question {
+        padding-bottom: 10px;
+    }
+
+    #source_text {
+        white-space: pre-line;
+    }
+
+    #submit_button {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+</style>
+
+<crowd-form>
+    <div style="background-color: white;">
+        <classification-target>
+            <div class="row">
+                <!-- Left panel to display the source text -->
+                <div class="column" style="padding: 20px 40px 0px 40px;background-color: white; width: 30%;">
+                    <p id="source_text">{{ task.input.source }}</p>
+                </div>
+
+                <!-- Right panel for questions -->
+                <div class="column" style="width: 60%">
+                    <form action="">
+                        <div style="padding: 0px 0px 0px 40px;">
+                            <!-- Question 1 -->
+                            <div class="question">
+                                <label for="relevance_to_prompt">Does the content accurately reflect the intent of the original prompt?</label>
+                                <select name="relevance_to_prompt" id="relevance_to_prompt" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Question 2 -->
+                            <div class="question">
+                                <label for="clarity">Is the content clear and easy to understand?</label>
+                                <select name="clarity" id="clarity" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Question 3 -->
+                            <div class="question">
+                                <label for="completeness">Does the content provide a complete response to the prompt?</label>
+                                <select name="completeness" id="completeness" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Question 4 -->
+                            <div class="question">
+                                <label for="correctness">Is the information presented correct and free of errors?</label>
+                                <select name="correctness" id="correctness" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Question 5 -->
+                            <div class="question">
+                                <label for="appropriateness">Is the content appropriate for the intended audience and context?</label>
+                                <select name="appropriateness" id="appropriateness" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Question 6 -->
+                            <div class="question">
+                                <label for="engagement">Is the content engaging and likely to hold the audience's attention?</label>
+                                <select name="engagement" id="engagement" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Question 7 -->
+                            <div class="question">
+                                <label for="use_of_language">Is the language used in the content appropriate?</label>
+                                <select name="use_of_language" id="use_of_language" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Question 8 -->
+                            <div class="question">
+                                <label for="formatting_presentation">Is the content well-formatted and presented in a visually appealing manner?</label>
+                                <select name="formatting_presentation" id="formatting_presentation" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Question 9 -->
+                            <div class="question">
+                                <label for="consistency">Is the tone and style of the content consistent throughout?</label>
+                                <select name="consistency" id="consistency" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Question 10 -->
+                            <div class="question">
+                                <label for="use_of_resources">Does the content make effective use of images, examples, or references to support its points?</label>
+                                <select name="use_of_resources" id="use_of_resources" class="question_dropdown">
+                                    <option style="display:none"></option>
+                                    <option value="Yes">Yes</option>
+                                    <option value="No">No</option>
+                                    <option value="Not Sure">Not Sure</option>
+                                </select>
+                            </div>
+
+                            <!-- Comments section -->
+                            <div class="question">
+                                <label for="comments">Enter any Comments:</label>
+                                <input type="text" id="comments" name="additionalComments" />
+                            </div>
+                        </div>
+
+                        <!-- Submit button -->
+                        <crowd-button id="submit_button" form-action="submit" disabled="true">Submit</crowd-button>
+                    </form>
+                </div>
+            </div>
+        </classification-target>
+    </div>
+
+    <!-- Short instructions -->
+    <short-instructions>
+        <p>Answer the questions after reviewing content on the left.</p>
+        <classification-reasons-container></classification-reasons-container>
+    </short-instructions>
+</crowd-form>
+
+<script type="text/javascript">
+    // Enable/disable submit button based on dropdown selections
+    $('.question_dropdown').change(function () {
+        var buttonDisabled = false;
+        $('.question_dropdown').each(function () {
+            if ($(this).val() == "") {
+                buttonDisabled = true;
+            }
+        });
+        document.getElementById('submit_button').disabled = buttonDisabled;
+    });
+
+    // Replace special characters in source text
+    var source = document.getElementById('source_text').innerHTML;
+    let new_source = source.replaceAll("\u2424", "\n");
+    document.getElementById('source_text').innerHTML = new_source;
+</script>
