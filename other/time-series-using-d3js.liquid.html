@@ -1,0 +1,154 @@
+<!-- This code uses the D3.js library, which is licensed under the BSD 3-Clause License. 
+     For more information, see https://github.com/d3/d3/blob/main/LICENSE -->
+
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Time Series Anomaly Annotation</title>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <style>
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2;
+        }
+        .overlay {
+            fill: none;
+            pointer-events: all;
+        }
+        .selection {
+            fill: rgba(76, 175, 80, 0.3);
+            stroke: #4CAF50;
+        }
+        .grid line {
+            stroke: lightgrey;
+            stroke-opacity: 0.7;
+            shape-rendering: crispEdges;
+        }
+    </style>
+</head>
+<body>
+<crowd-form>
+
+<!-- Sample Input Manifest:
+{
+  "source": "[{\"date\":\"2024-01-01T00:00:00Z\",\"value\":1.2},{\"date\":\"2024-01-01T01:00:00Z\",\"value\":1.0},{\"date\":\"2024-01-01T02:00:00Z\",\"value\":1.0},{\"date\":\"2024-01-01T03:00:00Z\",\"value\":1.3},{\"date\":\"2024-01-01T04:00:00Z\",\"value\":1.5},{\"date\":\"2024-01-01T05:00:00Z\",\"value\":1.8},{\"date\":\"2024-01-01T06:00:00Z\",\"value\":1.2},{\"date\":\"2024-01-01T07:00:00Z\",\"value\":1.4},{\"date\":\"2024-01-01T08:00:00Z\",\"value\":1.6},{\"date\":\"2024-01-01T09:00:00Z\",\"value\":1.1}]"
+}
+-->
+
+    <div id="chart" data-task-object='{{ task.input.taskObject }}'></div>
+    <label for="anomaly-type">Anomaly Type:</label>
+    <select id="anomaly-type" name="anomaly-name">
+        <option value="up">Up</option>
+        <option value="down">Down</option>
+    </select>
+    <div id="annotations"></div>
+    <button id="add-annotation">Add Annotation</button>
+    <button id="submit">Submit</button>
+    <input type="hidden" id="annotation-data" name="annotationData" />
+</crowd-form>
+<script>
+
+
+    const taskObject = document.getElementById('chart').getAttribute('data-task-object');
+    const data = JSON.parse(taskObject); // Now parse the JSON from the attribute
+
+    const margin = { top: 20, right: 20, bottom: 30, left: 50 },
+          width = 960 - margin.left - margin.right,
+          height = 500 - margin.top - margin.bottom;
+
+    const svg = d3.select("#chart").append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    const x = d3.scaleTime().domain(d3.extent(data, d => new Date(d.date))).range([0, width]);
+    const y = d3.scaleLinear().domain([0, d3.max(data, d => d.value)]).nice().range([height, 0]);
+
+    svg.append("g")
+        .attr("class", "grid")
+        .call(d3.axisLeft(y).ticks(5).tickSize(-width).tickFormat(''));
+    svg.append("g")
+        .attr("class", "grid")
+        .call(d3.axisBottom(x).ticks(data.length / 2).tickSize(height).tickFormat(''));
+    svg.append("g")
+        .call(d3.axisLeft(y));
+    svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x));
+
+    svg.append("path")
+        .datum(data)
+        .attr("class", "line")
+        .attr("d", d3.line().x(d => x(new Date(d.date))).y(d => y(d.value)));
+
+    let selection = svg.append("rect")
+        .attr("class", "selection")
+        .attr("visibility", "hidden");
+    let startX;
+
+    svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", width)
+        .attr("height", height)
+        .on("mousedown", function(event) {
+            startX = d3.pointer(event, this)[0];
+            selection.attr("x", startX)
+                     .attr("y", 0)
+                     .attr("width", 0)
+                     .attr("height", height)
+                     .attr("visibility", "visible");
+        })
+        .on("mousemove", function(event) {
+            if (!startX) return;
+            const x0 = Math.min(startX, d3.pointer(event, this)[0]);
+            const x1 = Math.max(startX, d3.pointer(event, this)[0]);
+            selection.attr("x", x0)
+                     .attr("width", x1 - x0);
+        })
+        .on("mouseup", function() {
+            startX = null;
+        });
+
+    let annotations = [];
+
+    document.getElementById("add-annotation").addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent form submission
+        const x0 = parseFloat(selection.attr("x"));
+        const width = parseFloat(selection.attr("width"));
+        const type = document.getElementById("anomaly-type").value;
+
+        const start = x.invert(x0);
+        const end = x.invert(x0 + width);
+
+        const annotation = {
+            anomalyType: type,
+            startTime: start.toISOString(),
+            endTime: end.toISOString()
+        };
+        annotations.push(annotation);
+
+        renderAnnotations();
+        selection.attr("visibility", "hidden");
+    });
+
+    function renderAnnotations() {
+        const annotationsContainer = document.getElementById("annotations");
+        annotationsContainer.innerHTML = "";
+        annotations.forEach(annotation => {
+            const annotationElem = document.createElement("div");
+            annotationElem.textContent = `Type: ${annotation.anomalyType}, Start: ${annotation.startTime}, End: ${annotation.endTime}`;
+            annotationsContainer.appendChild(annotationElem);
+        });
+    }
+
+    document.getElementById("submit").addEventListener("click", function() {
+        const annotationsJson = JSON.stringify(annotations);
+        document.getElementById("annotation-data").value = annotationsJson;
+        document.querySelector("crowd-form").submit();
+    });
+</script>
+</body>
+</html>
