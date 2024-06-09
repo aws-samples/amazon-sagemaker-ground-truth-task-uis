@@ -1,0 +1,112 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+  body {
+    padding-left: 20px;
+    margin-bottom: 20px;
+  }
+  .highlight {
+    background-color: yellow;
+  }
+  .container {
+    margin-bottom: 20px;
+  }
+  .outer-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1400px;
+  }
+  .left-container, .right-container {
+    padding: 20px;
+    width: 48%;
+  }
+  .right-container {
+    border-left: 2px solid #d5dbdb;
+  }
+</style>
+
+<crowd-form>
+	
+	<!-- Sample Input Manifest:
+		{"source": "Describe the behavior of the quick brown fox.","response": "The quick brown <b>fox</b> jumps over the <span class=\"highlight\">lazy dog</span>. The quick brown fox is known for its <i>agility</i> and <i>speed</i>.","highlightParts": ["lazy dog"]}
+	-->
+  <div class="container">
+    <h1>Instructions</h1>
+    For the prompt-response pair below, please complete the tasks on the right panel using your best judgment. 
+  </div>
+  <br>
+  <div class="outer-container">
+    <div class="left-container">
+      <h2>Prompt</h2>
+      <div>{{ task.input.taskObject }}</div>
+      <br>
+      <h2>Response</h2>
+      <div id="highlighted-text"></div>
+      <div id="textToHighlight" data-text-to-highlight='{{ task.input.response }}'></div>
+      <div id="highlightParts" data-highlight-parts='{{ task.input.highlightParts }}'></div>
+    </div>
+    <div class="right-container">
+      <h2>Evaluation</h2>
+      <div>
+        <label for="accuracy">Accuracy:</label>
+        <select name="accuracy" id="accuracy" required>
+          <option value="" disabled selected>Select accuracy level</option>
+          <option value="1">1 - Very Inaccurate</option>
+          <option value="2">2 - Inaccurate</option>
+          <option value="3">3 - Neutral</option>
+          <option value="4">4 - Accurate</option>
+          <option value="5">5 - Very Accurate</option>
+        </select>
+      </div>
+      <br>
+      <div>
+        <label for="clarity">Clarity:</label>
+        <div>
+          <input type="radio" id="clarity1" name="clarity" value="1" required>
+          <label for="clarity1">1 - Very Unclear</label><br>
+          <input type="radio" id="clarity2" name="clarity" value="2">
+          <label for="clarity2">2 - Unclear</label><br>
+          <input type="radio" id="clarity3" name="clarity" value="3">
+          <label for="clarity3">3 - Neutral</label><br>
+          <input type="radio" id="clarity4" name="clarity" value="4">
+          <label for="clarity4">4 - Clear</label><br>
+          <input type="radio" id="clarity5" name="clarity" value="5">
+          <label for="clarity5">5 - Very Clear</label>
+        </div>
+      </div>
+      <br>
+      <div>
+        <label for="issues">Select any issues observed:</label>
+        <div>
+          <input type="checkbox" id="grammar" name="issues" value="grammar">
+          <label for="grammar">Grammar issues</label><br>
+          <input type="checkbox" id="factual" name="issues" value="factual">
+          <label for="factual">Factual inaccuracies</label><br>
+          <input type="checkbox" id="missing" name="issues" value="missing">
+          <label for="missing">Missing information</label><br>
+          <input type="checkbox" id="other" name="issues" value="other">
+          <label for="other">Other</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</crowd-form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Get the text and parts to highlight from the data attributes
+    const textToHighlight = document.getElementById('textToHighlight').getAttribute('data-text-to-highlight');
+    const highlightParts = JSON.parse(document.getElementById('highlightParts').getAttribute('data-highlight-parts'));
+
+    // Process the text to add the highlights
+    let highlightedText = textToHighlight;
+    highlightParts.forEach(part => {
+      const regex = new RegExp(`(${part})`, 'gi');
+      highlightedText = highlightedText.replace(regex, '<span class="highlight">$1</span>');
+    });
+
+    // Inject the text with highlights into the DOM
+    document.getElementById('highlighted-text').innerHTML = highlightedText;
+  });
+</script>
