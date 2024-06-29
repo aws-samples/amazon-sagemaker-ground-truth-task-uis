@@ -1,0 +1,36 @@
+<!--
+This template can be launched using the CreateLabelingJob API. For a detailed example, refer to the following Jupyter notebook: 
+<a href="https://github.com/aws-samples/amazon-sagemaker-groundtruth-immersionday/blob/main/07-module-label-generativeai/SageMaker-GroundTruth-Generative-AI-Question-Answer.ipynb" target="_blank">Example Notebook</a>
+
+Note: The console version of this template is currently in private preview. 
+To request access, please contact the Amazon SageMaker Ground Truth support team for whitelisting and addition to the console interface.
+-->
+
+<html>
+  <head>
+    <link rel="stylesheet" href="https://assets.crowd.aws/css/gen-ai-components.css" />
+    <title>Question-Answer Generation Tool</title>
+    <script src="https://assets.crowd.aws/gen-ai-components.js"></script>
+  </head>
+  <body>
+    <div>
+      <crowd-form id="crowd-form-qa" style="display: none"></crowd-form>
+      <crowd-question-answer-generation
+        crowd-form-element-id="crowd-form-qa"
+        text='{{ task.input.source }}'
+        min-questions="1"
+        max-questions="5"
+        question-min-words="1"
+        question-max-words="20"
+        answer-min-words="1"
+        answer-max-words="20"
+        question-tags='["What", "Why", "When", "Where", "Which", "Who", "How"]'
+        allow-custom-tags="true"
+        instructions='- Create questions and answers based on the provided text passage.
+                      - Select at least 1 text reference for a Q&A pair (unless it references the entire text passage)
+                      - Question tags are "Who", "What", "When", "Where", "Why", "How", "Which" and "Whose". Select the appropriate tag based on your question.
+                      - Other types of questions are permitted (example- yes/no, completion statements etc). If applicable, add a custom tag for such Q&A pairs.'></crowd-question-answer-generation>
+    </div>
+    <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+  </body>
+</html>
