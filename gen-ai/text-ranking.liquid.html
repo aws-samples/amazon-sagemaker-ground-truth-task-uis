@@ -1,0 +1,32 @@
+<!--
+This template can be launched using the CreateLabelingJob API. For a detailed example, refer to the following Jupyter notebook: 
+https://github.com/aws-samples/amazon-sagemaker-groundtruth-immersionday/blob/main/07-module-label-generativeai/SageMaker-GroundTruth-Generative-AI-Text-Ranking.ipynb
+
+Note: The console version of this template is currently in private preview. 
+To request access, please contact the Amazon SageMaker Ground Truth support team for whitelisting and addition to the console interface.
+
+The length of the prompt, number of responses, and ranking dimension can all be customized. Customize dimensions in the field ordinal-ranking-dimensions
+-->
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://assets.crowd.aws/css/gen-ai-components.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>&#129351;</text></svg>" />
+    <title>Text Ranking Tool</title>
+    <script src="https://assets.crowd.aws/gen-ai-components.js"></script>
+  </head>
+
+  <body>
+    <div>
+      <crowd-text-ranking
+        crowd-form-element-id="crowd-form-submit"
+        instructions='Rank the following responses from a language model according to the Dimensions on the right panel.'
+        ordinal-ranking-dimensions='[{"name":"Clarity","allowTie":true},{"name":"Inclusivity","allowTie":false}]'  
+        text='{{ task.input.source }}'
+        responses='{{ task.input.responses | to_json }}' />
+    </div>
+    <crowd-form id="crowd-form-submit" style="display: none"></crowd-form>
+    <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+  </body>
+</html>
