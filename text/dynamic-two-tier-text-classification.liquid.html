@@ -1,0 +1,139 @@
+<!-- Dynamic Two-Tier Text Evaluation Template -->
+
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="response_quality"
+      categories="['Excellent', 'Good', 'Fair', 'Poor']"
+      header="How would you rate the quality of the response to the given prompt?"
+    >
+      <classification-target>
+        <!-- 
+		    User Customization: 
+		    The liquid variables {{ task.input.prompt }} and {{ task.input.response }} will be populated 
+		    by the pre-labeling Lambda function. This Lambda function maps data from your input 
+		    manifest to the template.
+		    
+		    Ensure your Lambda function provides these 'prompt' and 'response' keys, or modify 
+		    this template to match the key names your Lambda function outputs.
+		    
+		    Example manifest line:
+     		{"source": "Explain the theory of relativity", "response": "The theory of relativity, proposed by Albert Einstein, describes how..."}
+  			-->
+        <p><strong>Prompt:</strong> {{ task.input.prompt }}</p>
+        <p><strong>Response:</strong> {{ task.input.response }}</p>
+      </classification-target>
+
+      <full-instructions header="Response Quality Evaluation Instructions">
+        <!-- 
+          User Customization: 
+          Modify these instructions to match your evaluation criteria and categories.
+        -->
+        <p><strong>Excellent Response:</strong> Fully addresses the prompt, well-structured, insightful analysis, appropriate tone</p>
+        <p><strong>Good Response:</strong> Addresses most of the prompt, generally well-structured, shows understanding, mostly appropriate tone</p>
+        <p><strong>Fair Response:</strong> Partially addresses the prompt, some structure issues, limited analysis, tone inconsistencies</p>
+        <p><strong>Poor Response:</strong> Does not address the prompt, poorly structured, lack of understanding, inappropriate tone, may be off-topic or contain factual errors</p>
+      </full-instructions>
+
+      <short-instructions>
+        <p>Choose the rating that best describes the quality of the response in relation to the given prompt.</p>
+      </short-instructions>
+    </crowd-classifier>
+    <classification-reasons-container></classification-reasons-container>
+</crowd-form>
+
+<script>
+// User Customization:
+// Modify this CONFIG object to change the main categories and dependent questions.
+// You can add, remove, or modify categories and their associated questions as needed.
+const CONFIG = {
+  mainCategories: [
+    { value: 'Excellent', label: 'Excellent Response' },
+    { value: 'Good', label: 'Good Response' },
+    { value: 'Fair', label: 'Fair Response' },
+    { value: 'Poor', label: 'Poor Response' }
+  ],
+  dependentQuestions: {
+    'Excellent': ['Fully addresses the prompt', 'Well-structured', 'Insightful analysis', 'Appropriate tone'],
+    'Good': ['Addresses most of the prompt', 'Generally well-structured', 'Shows understanding', 'Mostly appropriate tone'],
+    'Fair': ['Partially addresses the prompt', 'Some structure issues', 'Limited analysis', 'Tone inconsistencies'],
+    'Poor': ['Does not address the prompt', 'Poorly structured', 'Lack of understanding', 'Inappropriate tone', 'Off-topic', 'Factual errors', 'Unclear or confusing']
+  }
+};
+
+// Helper function to create input fields for questions
+const createQuestionInputField = (name, question, type = 'checkbox') => {
+  const inputId = question.replace(/\s+/g, '-').toLowerCase();
+  const html = `
+    <div>
+      <label style="display: block; padding-left: 15px; text-indent: -15px; margin-bottom: 5px;">
+        <input type="${type}" name="${name}" value="${question}" id="${inputId}"
+               style="width: 13px; height: 13px; padding: 0; margin: 0 5px 0 0; vertical-align: bottom; position: relative; top: -1px; overflow: hidden;">
+        ${question}
+      </label>
+    </div>
+  `;
+  return html;
+};
+
+document.addEventListener('all-crowd-elements-ready', function() {
+  const container = document.querySelector('crowd-classifier').shadowRoot.querySelector('.annotation-area .category-picker-wrapper');
+  const crowdFormInnerContainer = document.querySelector('classification-reasons-container');
+
+  const card = document.createElement('crowd-card');
+  card.style.cssText = 'padding: 1.5rem; max-width: 21vw; overflow-y: auto; margin-bottom: 20px;';
+  card.innerHTML = 'Depending on your selection, there may be additional questions';
+
+  const createQuestionDropdown = (value) => {
+    const questions = CONFIG.dependentQuestions[value];
+    crowdFormInnerContainer.innerHTML = '';
+
+    if (questions.length === 0) {
+      card.innerHTML = 'There are no additional questions.';
+      return;
+    }
+
+    let cardContent = 'Please mark all items that apply to this response:<br><br>';
+    questions.forEach((q) => {
+      cardContent += createQuestionInputField('classification-reasoning', q);
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'checkbox';
+      hiddenInput.name = 'classification-reasoning';
+      hiddenInput.value = q;
+      hiddenInput.style.display = 'none';
+      crowdFormInnerContainer.appendChild(hiddenInput);
+    });
+
+    card.innerHTML = cardContent;
+
+    // Sync visible checkboxes with hidden inputs
+    card.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.addEventListener('change', (e) => {
+        const hiddenInput = crowdFormInnerContainer.querySelector(`input[value="${e.target.value}"]`);
+        if (hiddenInput) {
+          hiddenInput.checked = e.target.checked;
+        }
+      });
+    });
+
+    // Adjust card height based on content
+    card.style.height = 'auto';
+    const maxHeight = window.innerHeight * 0.7; // 70% of viewport height
+    if (card.offsetHeight > maxHeight) {
+      card.style.height = `${maxHeight}px`;
+    }
+  };
+
+  customElements.whenDefined('crowd-classifier').then(() => {
+    container.insertAdjacentElement('afterend', card);
+
+    const crowdClassifier = document.querySelector('crowd-classifier');
+    // User Customization: Update the categories here if you modify the CONFIG object
+    crowdClassifier.categories = CONFIG.mainCategories.map(cat => cat.value);
+    crowdClassifier.addEventListener('change', (e) => {
+      createQuestionDropdown(e.target.value);
+    });
+  });
+});
+</script>
