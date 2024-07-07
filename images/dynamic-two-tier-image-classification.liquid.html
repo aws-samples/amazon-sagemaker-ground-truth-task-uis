@@ -1,0 +1,132 @@
+<!-- Dynamic Two-Tier Image Classification Template -->
+
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<crowd-form>
+    <crowd-classifier
+      name="image_category"
+      categories="['Landscape', 'Portrait', 'Still Life', 'Abstract']"
+      header="What is the primary category of this image?"
+    >
+      <classification-target>
+        <!-- 
+		    User Customization: 
+		    The liquid variable {{ task.input.taskObject | grant_read_access }} will be populated by the pre-labeling Lambda function.
+		    This Lambda function maps data from your input manifest to the template.
+		    Ensure your Lambda function provides this 'taskObject' key, or modify this template to match the key names your Lambda function outputs.
+  			-->
+        <img src="{{ task.input.taskObject | grant_read_access }}" style="max-width: 100%; max-height: 500px;">
+      </classification-target>
+
+      <full-instructions header="Image Classification Instructions">
+        <!-- 
+          User Customization: 
+          Modify these instructions to match your classification criteria and categories.
+        -->
+        <p><strong>Landscape:</strong> Depicts natural scenery such as mountains, forests, beaches, or cityscapes</p>
+        <p><strong>Portrait:</strong> Focuses on a person or group of people as the main subject</p>
+        <p><strong>Still Life:</strong> Depicts inanimate objects, typically arranged on a table or similar surface</p>
+        <p><strong>Abstract:</strong> Non-representational art that does not depict recognizable objects or scenes</p>
+      </full-instructions>
+
+      <short-instructions>
+        <p>Select the category that best describes the primary subject of the image.</p>
+      </short-instructions>
+    </crowd-classifier>
+    <classification-reasons-container></classification-reasons-container>
+</crowd-form>
+
+<script>
+// User Customization:
+// Modify this CONFIG object to change the main categories and dependent questions.
+// You can add, remove, or modify categories and their associated questions as needed.
+const CONFIG = {
+  mainCategories: [
+    { value: 'Landscape', label: 'Landscape' },
+    { value: 'Portrait', label: 'Portrait' },
+    { value: 'Still Life', label: 'Still Life' },
+    { value: 'Abstract', label: 'Abstract' }
+  ],
+  dependentQuestions: {
+    'Landscape': ['Natural scenery', 'Urban landscape', 'Seascape', 'Rural scene', 'Time of day visible', 'Weather conditions visible'],
+    'Portrait': ['Single subject', 'Group portrait', 'Full body', 'Headshot', 'Candid', 'Posed', 'Environmental portrait'],
+    'Still Life': ['Food items', 'Flowers/plants', 'Household objects', 'Symbolic objects', 'Traditional arrangement', 'Modern composition'],
+    'Abstract': ['Geometric shapes', 'Color-focused', 'Texture-focused', 'Motion/movement depicted', 'Recognizable elements', 'Purely non-representational']
+  }
+};
+
+// Helper function to create input fields for questions
+const createQuestionInputField = (name, question, type = 'checkbox') => {
+  const inputId = question.replace(/\s+/g, '-').toLowerCase();
+  const html = `
+    <div>
+      <label style="display: block; padding-left: 15px; text-indent: -15px; margin-bottom: 5px;">
+        <input type="${type}" name="${name}" value="${question}" id="${inputId}"
+               style="width: 13px; height: 13px; padding: 0; margin: 0 5px 0 0; vertical-align: bottom; position: relative; top: -1px; overflow: hidden;">
+        ${question}
+      </label>
+    </div>
+  `;
+  return html;
+};
+
+document.addEventListener('all-crowd-elements-ready', function() {
+  const container = document.querySelector('crowd-classifier').shadowRoot.querySelector('.annotation-area .category-picker-wrapper');
+  const crowdFormInnerContainer = document.querySelector('classification-reasons-container');
+
+  const card = document.createElement('crowd-card');
+  card.style.cssText = 'padding: 1.5rem; max-width: 21vw; overflow-y: auto; margin-bottom: 20px;';
+  card.innerHTML = 'Depending on your selection, there may be additional questions';
+
+  const createQuestionDropdown = (value) => {
+    const questions = CONFIG.dependentQuestions[value];
+    crowdFormInnerContainer.innerHTML = '';
+
+    if (questions.length === 0) {
+      card.innerHTML = 'There are no additional questions.';
+      return;
+    }
+
+    let cardContent = 'Please mark all items that apply to this image:<br><br>';
+    questions.forEach((q) => {
+      cardContent += createQuestionInputField('classification-reasoning', q);
+      const hiddenInput = document.createElement('input');
+      hiddenInput.type = 'checkbox';
+      hiddenInput.name = 'classification-reasoning';
+      hiddenInput.value = q;
+      hiddenInput.style.display = 'none';
+      crowdFormInnerContainer.appendChild(hiddenInput);
+    });
+
+    card.innerHTML = cardContent;
+
+    // Sync visible checkboxes with hidden inputs
+    card.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+      checkbox.addEventListener('change', (e) => {
+        const hiddenInput = crowdFormInnerContainer.querySelector(`input[value="${e.target.value}"]`);
+        if (hiddenInput) {
+          hiddenInput.checked = e.target.checked;
+        }
+      });
+    });
+
+    // Adjust card height based on content
+    card.style.height = 'auto';
+    const maxHeight = window.innerHeight * 0.7; // 70% of viewport height
+    if (card.offsetHeight > maxHeight) {
+      card.style.height = `${maxHeight}px`;
+    }
+  };
+
+  customElements.whenDefined('crowd-classifier').then(() => {
+    container.insertAdjacentElement('afterend', card);
+
+    const crowdClassifier = document.querySelector('crowd-classifier');
+    // User Customization: Update the categories here if you modify the CONFIG object
+    crowdClassifier.categories = CONFIG.mainCategories.map(cat => cat.value);
+    crowdClassifier.addEventListener('change', (e) => {
+      createQuestionDropdown(e.target.value);
+    });
+  });
+});
+</script>
