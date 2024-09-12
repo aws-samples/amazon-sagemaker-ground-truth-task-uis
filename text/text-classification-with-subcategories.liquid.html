@@ -1,0 +1,73 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+
+<style>
+    .container {
+        display: flex;
+        justify-content: space-around;
+        align-items: flex-start;
+        padding: 20px;
+    }
+    .text-container {
+        width: 50%;
+    }
+    .categories {
+        width: 40%;
+    }
+    .subcategory {
+        display: none;
+        margin-left: 20px;
+    }
+    .text-header {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .submit-button {
+        margin-top: 20px;
+    }
+</style>
+
+<crowd-form>
+    <div class="container">
+        <div class="text-container">
+            <div class="text-header">Text Content</div>
+            <div>{{ task.input.source }}</div>
+        </div>
+        <div class="categories">
+            <!-- Category 1 -->
+            <div>
+                <label><input type="checkbox" name="category1" class="category" onchange="toggleSubcategories('subcategory1', this)"> Category 1</label>
+                <div class="subcategory" id="subcategory1">
+                    <label><input type="checkbox" name="subcategory1_1"> Subcategory 1.1</label><br>
+                    <label><input type="checkbox" name="subcategory1_2"> Subcategory 1.2</label>
+                </div>
+            </div>
+            <!-- Category 2 -->
+            <div>
+                <label><input type="checkbox" name="category2" class="category" onchange="toggleSubcategories('subcategory2', this)"> Category 2</label>
+                <div class="subcategory" id="subcategory2">
+                    <label><input type="checkbox" name="subcategory2_1"> Subcategory 2.1</label><br>
+                    <label><input type="checkbox" name="subcategory2_2"> Subcategory 2.2</label>
+                </div>
+            </div>
+            
+            <!-- Repeat this structure for each category, changing the names and IDs -->
+            <!-- ... -->
+            
+            <div class="submit-button">
+                <crowd-button form-action="submit">Submit</crowd-button>
+            </div>
+        </div>
+    </div>
+</crowd-form>
+
+    <script>
+        function toggleSubcategories(subcategoryId, element) {
+            var subcategories = document.getElementById(subcategoryId);
+            if (element.checked) {
+                subcategories.style.display = "block";
+            } else {
+                subcategories.style.display = "none";
+            }
+        }
+    </script>
