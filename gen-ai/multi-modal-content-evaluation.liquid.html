@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluate the Model's Response to the Prompt</title>
+    <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+    <style>
+        body {
+            font-size: 14px;
+        }
+
+        .flex-parent {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .left, .right {
+            width: 48%;
+        }
+
+        #s3-image {
+            max-width: 100%;
+            height: auto;
+            margin-top: 1rem;
+        }
+
+        crowd-card {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        crowd-card h3 {
+            margin: 0.5rem 0;
+            font-size: 16px;
+        }
+
+        .slider-description {
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        textarea {
+            width: 100%;
+            resize: vertical;
+            font-size: 14px;
+        }
+
+        p, label {
+            margin: 0.5rem 0;
+        }
+
+        input[type="submit"] {
+            margin-top: 1rem;
+        }
+
+        /* Reduce padding and margins to minimize scrolling */
+        .card-content {
+            padding: 0.5rem;
+        }
+
+        /* Adjust font sizes for better fit */
+        h2 {
+            font-size: 18px;
+            margin-bottom: 1rem;
+        }
+
+        h3 {
+            font-size: 16px;
+            margin-bottom: 0.5rem;
+        }
+
+        p {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <crowd-form>
+        <short-instructions>
+            <p>Your task is to evaluate the AI-generated description of an image based on accuracy, relevance, and completeness.</p>
+        </short-instructions>
+
+        <full-instructions>
+            <h2>Instructions</h2>
+            <p><strong>Objective:</strong> Review the prompt, the image, and the model's generated description. Evaluate the description according to the criteria below and provide any additional comments.</p>
+
+            <p><strong>Evaluation Criteria:</strong></p>
+            <ul>
+                <li><strong>Accuracy:</strong> Does the description accurately reflect what's shown in the image?</li>
+                <li><strong>Relevance:</strong> Is the description relevant to the prompt and the content of the image?</li>
+                <li><strong>Completeness:</strong> Does the description cover the main features and aspects of the image?</li>
+            </ul>
+
+            <p>Please provide honest and thoughtful evaluations to help improve the AI model.</p>
+        </full-instructions>
+
+        <h3>Evaluate the Model's Response to the Prompt</h3>
+        <div class="flex-parent">
+            <div class="left">
+                <crowd-card>
+                    <div class="card-content">
+                        <p><strong>Prompt: </strong>{{ task.input.source }}</p>
+                        <img src="{{ task.input.image | grant_read_access }}" alt="Prompt image" id="s3-image" width=300px>
+                    </div>
+                </crowd-card>
+                <crowd-card>
+                    <div class="card-content">
+                        <h3>Model's Description</h3>
+                        <p>{{ task.input.modelResponse }}</p>
+                    </div>
+                </crowd-card>
+            </div>
+
+            <div class="right">
+                <crowd-card>
+                    <div class="card-content">
+                        <h3>Evaluation</h3>
+                        <p>Please rate the AI-generated description based on the following aspects:</p>
+                        <br>
+                        <p class="slider-description"><strong>Accuracy:</strong> <em>Does the description accurately reflect what's shown in the image?</em></p>
+                        <crowd-slider name="accuracy" min="1" max="5" step="1" pin="true" required>
+                            <crowd-slider-label position="1">1</crowd-slider-label>
+                            <crowd-slider-label position="2">2</crowd-slider-label>
+                            <crowd-slider-label position="3">3</crowd-slider-label>
+                            <crowd-slider-label position="4">4</crowd-slider-label>
+                            <crowd-slider-label position="5">5</crowd-slider-label>
+                        </crowd-slider>
+
+                        <p class="slider-description"><strong>Relevance:</strong> <em>Is the description relevant to the prompt and the content of the image?</em></p>
+                        <crowd-slider name="relevance" min="1" max="5" step="1" pin="true" required>
+                            <crowd-slider-label position="1">1</crowd-slider-label>
+                            <crowd-slider-label position="2">2</crowd-slider-label>
+                            <crowd-slider-label position="3">3</crowd-slider-label>
+                            <crowd-slider-label position="4">4</crowd-slider-label>
+                            <crowd-slider-label position="5">5</crowd-slider-label>
+                        </crowd-slider>
+
+                        <p class="slider-description"><strong>Completeness:</strong> <em>Does the description cover the main features and aspects of the image?</em></p>
+                        <crowd-slider name="completeness" min="1" max="5" step="1" pin="true" required>
+                            <crowd-slider-label position="1">1</crowd-slider-label>
+                            <crowd-slider-label position="2">2</crowd-slider-label>
+                            <crowd-slider-label position="3">3</crowd-slider-label>
+                            <crowd-slider-label position="4">4</crowd-slider-label>
+                            <crowd-slider-label position="5">5</crowd-slider-label>
+                        </crowd-slider>
+                    </div>
+                </crowd-card>
+
+                <crowd-card>
+                    <div class="card-content">
+                        <h3>Additional Comments</h3>
+                        <p>Please provide any additional feedback or comments:</p>
+                        <br>
+                        <textarea name="additional-context" rows="3"></textarea>
+                    </div>
+                </crowd-card>
+            </div>
+        </div>
+    </crowd-form>
+</body>
+</html>
