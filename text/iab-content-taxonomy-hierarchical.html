@@ -1,0 +1,326 @@
+<!--
+This HTML file implements a hierarchical category selection form based on the IAB Content Taxonomy.
+
+IAB Content Taxonomy Version 3.0 is used to structure the categories and subcategories up to tier 4.
+
+Disclaimer:
+The IAB Content Taxonomy is the intellectual property of the Interactive Advertising Bureau (IAB).
+This implementation is for educational and illustrative purposes only.
+Please ensure compliance with the IAB's terms of use and licensing agreements when using the IAB Content Taxonomy in your projects.
+For more information, visit the IAB's official website: https://www.iab.com/guidelines/content-taxonomy/
+
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Category Hierarchy with TSV Data</title>
+    <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+    <style>
+        .container {
+            display: flex;
+            padding: 20px;
+        }
+        .pane {
+            flex: 1;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .text-container {
+            width: 30%;
+        }
+        .categories {
+            width: 40%;
+            overflow-y: auto;
+            max-height: 600px; /* Adjust as needed */
+        }
+        .options-container {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+        }
+        .categories div {
+            margin-bottom: 5px;
+        }
+        .text-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .submit-button {
+            margin-top: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <crowd-form>
+        <div class="container">
+            <!-- Left Pane -->
+            <div class="pane text-container">
+                <div class="text-header">Text Content</div>
+                <div>{{ task.input.source }}</div>
+            </div>
+            <!-- Middle Pane -->
+            <div class="pane categories" id="categories">
+                <!-- Categories will be generated here -->
+            </div>
+            <!-- Right Pane -->
+            <div class="pane options-container">
+                <div>
+                    <label><input type="checkbox" name="not_sure"> Not Sure</label>
+                </div>
+                <div style="margin-top: 20px;">
+                    <label for="additional_comments">Additional Comments:</label>
+                    <textarea name="additional_comments" id="additional_comments"></textarea>
+                </div>
+                <div class="submit-button">
+                    <crowd-button form-action="submit">Submit</crowd-button>
+                </div>
+            </div>
+        </div>
+    </crowd-form>
+
+    <script>
+        // Expanded TSV data with more tier 4 examples
+        var tsvData = `
+IAB1\tArts & Entertainment
+IAB1-1\tBooks & Literature
+IAB1-1-1\tBook Reviews
+IAB1-1-1-1\tFiction Book Reviews
+IAB1-1-1-2\tNon-Fiction Book Reviews
+IAB1-1-2\tLiterary Classics
+IAB1-1-2-1\tAncient Classics
+IAB1-1-2-2\tModern Classics
+IAB1-2\tCelebrity Fan/Gossip
+IAB1-2-1\tCelebrity News
+IAB1-2-1-1\tHollywood News
+IAB1-2-1-2\tBollywood News
+IAB1-2-2\tPaparazzi
+IAB1-2-2-1\tCelebrity Sightings
+IAB1-2-2-2\tScandals
+IAB1-3\tFine Art
+IAB1-3-1\tPainting
+IAB1-3-1-1\tOil Painting
+IAB1-3-1-2\tWatercolor Painting
+IAB1-3-2\tSculpture
+IAB1-3-2-1\tStone Sculpture
+IAB1-3-2-2\tMetal Sculpture
+IAB1-4\tHumor
+IAB1-4-1\tJokes
+IAB1-4-1-1\tKnock-Knock Jokes
+IAB1-4-1-2\tOne-Liners
+IAB1-4-2\tStand-Up Comedy
+IAB1-4-2-1\tLive Performances
+IAB1-4-2-2\tComedy Specials
+IAB1-5\tMovies
+IAB1-5-1\tAction & Adventure
+IAB1-5-1-1\tSuperhero Movies
+IAB1-5-1-2\tMartial Arts Movies
+IAB1-5-2\tComedies
+IAB1-5-2-1\tRomantic Comedies
+IAB1-5-2-2\tDark Comedies
+IAB1-5-3\tHorror
+IAB1-5-3-1\tSupernatural Horror
+IAB1-5-3-2\tPsychological Horror
+IAB1-6\tMusic
+IAB1-6-1\tRock
+IAB1-6-1-1\tClassic Rock
+IAB1-6-1-2\tAlternative Rock
+IAB1-6-2\tPop
+IAB1-6-2-1\tTeen Pop
+IAB1-6-2-2\tDance Pop
+IAB1-7\tTelevision
+IAB1-7-1\tReality TV
+IAB1-7-1-1\tTalent Shows
+IAB1-7-1-2\tDating Shows
+IAB1-7-2\tTV Dramas
+IAB1-7-2-1\tMedical Dramas
+IAB1-7-2-2\tCrime Dramas
+IAB2\tAutomotive
+IAB2-1\tAuto Parts
+IAB2-1-1\tTires
+IAB2-1-1-1\tAll-Season Tires
+IAB2-1-1-2\tWinter Tires
+IAB2-1-2\tBrakes
+IAB2-1-2-1\tDisc Brakes
+IAB2-1-2-2\tDrum Brakes
+IAB2-2\tAuto Repair
+IAB2-2-1\tBody Work
+IAB2-2-1-1\tDent Removal
+IAB2-2-1-2\tPaint Jobs
+IAB2-2-2\tEngine Repair
+IAB2-2-2-1\tEngine Rebuilds
+IAB2-2-2-2\tOil Changes
+IAB2-3\tBuying/Selling Cars
+IAB2-3-1\tNew Cars
+IAB2-3-1-1\tSedans
+IAB2-3-1-2\tSUVs
+IAB2-3-2\tUsed Cars
+IAB2-3-2-1\tCertified Pre-Owned
+IAB2-3-2-2\tPrivate Sales
+IAB2-4\tCar Culture
+IAB2-4-1\tCar Shows
+IAB2-4-1-1\tClassic Car Shows
+IAB2-4-1-2\tAuto Expos
+IAB2-4-2\tMotorsports
+IAB2-4-2-1\tFormula 1
+IAB2-4-2-2\tNASCAR
+IAB3\tBusiness
+IAB3-1\tAdvertising
+IAB3-1-1\tOnline Advertising
+IAB3-1-1-1\tDisplay Advertising
+IAB3-1-1-2\tSearch Engine Marketing
+IAB3-1-2\tOffline Advertising
+IAB3-1-2-1\tPrint Advertising
+IAB3-1-2-2\tBroadcast Advertising
+IAB3-2\tMarketing
+IAB3-2-1\tDigital Marketing
+IAB3-2-1-1\tContent Marketing
+IAB3-2-1-2\tSocial Media Marketing
+IAB3-2-2\tTraditional Marketing
+IAB3-2-2-1\tDirect Mail
+IAB3-2-2-2\tTelemarketing
+IAB3-3\tBusiness Software
+IAB3-3-1\tCRM Software
+IAB3-3-1-1\tSales Management
+IAB3-3-1-2\tCustomer Support
+IAB3-3-2\tAccounting Software
+IAB3-3-2-1\tPayroll Software
+IAB3-3-2-2\tBilling & Invoicing
+IAB4\tCareers
+IAB4-1\tJob Search
+IAB4-1-1\tResume Writing
+IAB4-1-1-1\tResume Templates
+IAB4-1-1-2\tCover Letters
+IAB4-1-2\tInterview Preparation
+IAB4-1-2-1\tCommon Interview Questions
+IAB4-1-2-2\tSalary Negotiation
+IAB4-2\tCareer Advice
+IAB4-2-1\tCareer Change
+IAB4-2-1-1\tSkills Assessment
+IAB4-2-1-2\tTraining & Education
+IAB4-2-2\tWorkplace Issues
+IAB4-2-2-1\tConflict Resolution
+IAB4-2-2-2\tWork-Life Balance
+IAB5\tEducation
+IAB5-1\tCollege
+IAB5-1-1\tCollege Life
+IAB5-1-1-1\tDorm Living
+IAB5-1-1-2\tStudy Abroad
+IAB5-1-2\tCollege Admissions
+IAB5-1-2-1\tSAT Prep
+IAB5-1-2-2\tScholarships
+IAB5-2\tK-12 Education
+IAB5-2-1\tElementary School
+IAB5-2-1-1\tReading Skills
+IAB5-2-1-2\tMath Skills
+IAB5-2-2\tHigh School
+IAB5-2-2-1\tAP Courses
+IAB5-2-2-2\tExtracurricular Activities
+        `;
+
+        function parseTSV(tsv) {
+            var lines = tsv.trim().split('\n');
+            var data = [];
+            for (var i = 0; i < lines.length; i++) {
+                var parts = lines[i].split('\t');
+                if (parts.length >= 2) {
+                    data.push({
+                        code: parts[0],
+                        name: parts[1]
+                    });
+                }
+            }
+            return data;
+        }
+
+        function buildHierarchy(data) {
+            var root = [];
+            var codeMap = {};
+
+            data.forEach(function(item) {
+                var codes = item.code.split('-');
+                var codePath = '';
+                var parentCode = '';
+
+                codes.forEach(function(codePart, index) {
+                    codePath = (index === 0) ? codePart : codePath + '-' + codePart;
+
+                    if (!codeMap[codePath]) {
+                        var newItem = {
+                            code: codePath,
+                            name: '',
+                            subcategories: []
+                        };
+                        codeMap[codePath] = newItem;
+
+                        if (index === 0) {
+                            root.push(newItem);
+                        } else {
+                            codeMap[parentCode].subcategories.push(newItem);
+                        }
+                    }
+
+                    if (index === codes.length - 1) {
+                        codeMap[codePath].name = item.name;
+                    }
+
+                    parentCode = codePath;
+                });
+            });
+
+            return root;
+        }
+
+        function toggleSubcategories(subcategoryId, checkbox) {
+            var subcategories = document.getElementById(subcategoryId);
+            if (subcategories) {
+                subcategories.style.display = checkbox.checked ? "block" : "none";
+            }
+        }
+
+        function createCategoryElement(category, level) {
+            var container = document.createElement('div');
+            container.style.marginLeft = level * 20 + 'px';
+
+            var label = document.createElement('label');
+            var input = document.createElement('input');
+            input.type = 'checkbox';
+            input.name = category.code;
+            input.onclick = function() {
+                toggleSubcategories('sub_' + category.code.replace(/[\W_]+/g, '_'), this);
+            };
+            label.appendChild(input);
+            label.appendChild(document.createTextNode(' ' + category.name));
+            container.appendChild(label);
+
+            if (category.subcategories && category.subcategories.length > 0) {
+                var subContainer = document.createElement('div');
+                subContainer.id = 'sub_' + category.code.replace(/[\W_]+/g, '_');
+                subContainer.style.display = 'none';
+                category.subcategories.forEach(function(subcat) {
+                    subContainer.appendChild(createCategoryElement(subcat, level + 1));
+                });
+                container.appendChild(subContainer);
+            }
+
+            return container;
+        }
+
+        window.onload = function() {
+            var parsedData = parseTSV(tsvData);
+            var categories = buildHierarchy(parsedData);
+
+            var categoriesContainer = document.getElementById('categories');
+            categories.forEach(function(category) {
+                categoriesContainer.appendChild(createCategoryElement(category, 0));
+            });
+        };
+    </script>
+</body>
+</html>
