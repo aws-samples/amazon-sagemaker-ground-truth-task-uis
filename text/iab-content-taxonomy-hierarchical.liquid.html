@@ -1,0 +1,183 @@
+<!--
+This HTML file implements a hierarchical category selection form based on the IAB Content Taxonomy.
+IAB Content Taxonomy Version 3.0 is used to structure the categories and subcategories up to tier 4.
+Disclaimer:
+The IAB Content Taxonomy is the intellectual property of the Interactive Advertising Bureau (IAB).
+This implementation is for educational and illustrative purposes only.
+Please ensure compliance with the IAB's terms of use and licensing agreements when using the IAB Content Taxonomy in your projects.
+For more information, visit the IAB's official website: https://www.iab.com/guidelines/content-taxonomy/
+
+-->
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Category Labeling Task</title>
+    <style>
+        .container {
+            display: flex;
+            padding: 20px;
+        }
+        .pane {
+            flex: 1;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .text-container {
+            width: 30%;
+        }
+        .categories {
+            width: 40%;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+        .options-container {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+        }
+        .text-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .category-container {
+            margin: 5px 0;
+        }
+        .toggle-button {
+            cursor: pointer;
+            width: 20px;
+            display: inline-block;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .category-label {
+            cursor: pointer;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <crowd-form>
+        <div class="container">
+            <!-- Left Pane -->
+            <div class="pane text-container">
+                <div class="text-header">Text Content</div>
+                <div>{{ task.input.source }}</div>
+            </div>
+
+            <!-- Middle Pane -->
+            <div class="pane categories" id="categories">
+                <!-- Categories will be generated here -->
+            </div>
+
+            <!-- Right Pane -->
+            <div class="pane options-container">
+                <div>
+                    <label><input type="checkbox" name="not_sure"> Not Sure</label>
+                </div>
+                <div style="margin-top: 20px;">
+                    <label for="additional_comments">Additional Comments:</label>
+                    <textarea name="additional_comments" id="additional_comments"></textarea>
+                </div>
+                <div style="margin-top: 20px;">
+                    <crowd-button form-action="submit">Submit</crowd-button>
+                </div>
+            </div>
+        </div>
+    </crowd-form>
+
+    <script>
+        // Your first 5 main categories with their subcategories
+        const tsvData = `IAB1	Arts & Entertainment
+IAB1-1	Books & Literature
+IAB1-1-1	Book Reviews
+IAB1-1-1-1	Fiction Book Reviews
+IAB1-1-1-2	Non-Fiction Book Reviews
+IAB1-2	Celebrity Fan/Gossip
+IAB1-2-1	Celebrity News
+IAB1-2-1-1	Hollywood News
+IAB1-2-1-2	Bollywood News
+IAB1-3	Fine Art
+IAB1-3-1	Painting
+IAB1-3-1-1	Oil Painting
+IAB1-3-1-2	Watercolor Painting
+IAB2	Automotive
+IAB2-1	Auto Parts
+IAB2-1-1	Engine Parts
+IAB2-1-1-1	Pistons
+IAB2-1-1-2	Cylinders
+IAB2-2	Car Culture
+IAB2-2-1	Car Shows
+IAB2-2-1-1	Classic Shows
+IAB2-2-1-2	Modern Shows
+IAB3	Business
+IAB3-1	Advertising
+IAB3-1-1	Digital Advertising
+IAB3-1-1-1	Social Media Ads
+IAB3-1-1-2	Search Ads
+IAB3-2	Marketing
+IAB3-2-1	Content Marketing
+IAB3-2-1-1	Blogs
+IAB3-2-1-2	Videos`;
+
+        // Process categories and identify parent categories
+        const categories = tsvData.split('\n').map(line => {
+            const [code, name] = line.split('\t');
+            const level = code.split('-').length - 1;
+            const hasChildren = tsvData.split('\n').some(otherLine => 
+                otherLine.startsWith(code + '-')
+            );
+            return { code, name, level, hasChildren };
+        });
+
+        // Generate HTML with collapsible sections
+    // Generate HTML with collapsible sections - modified to have subcategories hidden by default
+        const html = categories.map((cat, index) => {
+            const indent = cat.level * 20;
+            const toggleButton = cat.hasChildren ? 
+                `<span class="toggle-button" data-code="${cat.code}">▶</span>` : // Changed from ▼ to ▶
+                `<span class="toggle-button" style="visibility: hidden">▶</span>`;
+    
+            return `
+                <div class="category-container ${cat.level > 0 ? 'hidden' : ''}" style="margin-left: ${indent}px" data-parent="${cat.code}">
+                    ${toggleButton}
+                    <input type="radio" name="category_selection" value="${cat.code}" id="cat${index}">
+                    <label class="category-label" for="cat${index}">${cat.name}</label>
+                </div>
+            `;
+        }).join('');
+    
+        document.getElementById('categories').innerHTML = html;
+
+        // Add click handlers for toggle buttons
+        document.querySelectorAll('.toggle-button').forEach(button => {
+            if (button.style.visibility !== 'hidden') {
+                button.addEventListener('click', function() {
+                    const parentCode = this.dataset.code;
+                    const isExpanded = this.textContent === '▼';
+                    this.textContent = isExpanded ? '▶' : '▼';
+                    
+                    document.querySelectorAll('.category-container').forEach(container => {
+                        if (container.dataset.parent.startsWith(parentCode + '-')) {
+                            container.classList.toggle('hidden');
+                            if (isExpanded) {
+                                const nestedToggle = container.querySelector('.toggle-button');
+                                if (nestedToggle && nestedToggle.style.visibility !== 'hidden') {
+                                    nestedToggle.textContent = '▶';
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
