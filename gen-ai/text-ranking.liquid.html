@@ -18,15 +18,17 @@ The length of the prompt, number of responses, and ranking dimension can all be 
   </head>
 
   <body>
-    <div>
+    <crowd-form id="crowd-form-submit" >
       <crowd-text-ranking
-        crowd-form-element-id="crowd-form-submit"
-        instructions='Rank the following responses from a language model according to the Dimensions on the right panel.'
+        name="crowd-form-submit"
         ordinal-ranking-dimensions='[{"name":"Clarity","allowTie":true},{"name":"Inclusivity","allowTie":false}]'  
         text='{{ task.input.source }}'
-        responses='{{ task.input.responses | to_json }}' />
-    </div>
-    <crowd-form id="crowd-form-submit" style="display: none"></crowd-form>
-    <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+        responses='{{ task.input.responses | to_json }}'
+      >
+        <short-instructions>
+          <p>Rank the following responses from a language model according to the Dimensions on the right panel.</p>
+        </short-instructions>
+      </crowd-text-ranking>
+    </crowd-form>
   </body>
 </html>
