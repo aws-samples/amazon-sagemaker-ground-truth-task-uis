@@ -18,14 +18,14 @@ To request access, please contact the Amazon SageMaker Ground Truth support team
       <crowd-question-answer-generation
         crowd-form-element-id="crowd-form-qa"
         text='{{ task.input.source }}'
-        min-questions="1"
-        max-questions="5"
-        question-min-words="1"
-        question-max-words="20"
-        answer-min-words="1"
-        answer-max-words="20"
+        min-questions=1
+        max-questions=5
+        question-min-words=1
+        question-max-words=20
+        answer-min-words=1
+        answer-max-words=20
         question-tags='["What", "Why", "When", "Where", "Which", "Who", "How"]'
-        allow-custom-tags="true"
+        allow-custom-question-tags=true
         instructions='- Create questions and answers based on the provided text passage.
                       - Select at least 1 text reference for a Q&A pair (unless it references the entire text passage)
                       - Question tags are "Who", "What", "When", "Where", "Why", "How", "Which" and "Whose". Select the appropriate tag based on your question.
