@@ -20,7 +20,7 @@ The length of the prompt, number of responses, and ranking dimension can all be 
   <body>
     <crowd-form id="crowd-form-submit" >
       <crowd-text-ranking
-        name="crowd-form-submit"
+        name="textRanking"
         ordinal-ranking-dimensions='[{"name":"Clarity","allowTie":true},{"name":"Inclusivity","allowTie":false}]'  
         text='{{ task.input.source }}'
         responses='{{ task.input.responses | to_json }}'
